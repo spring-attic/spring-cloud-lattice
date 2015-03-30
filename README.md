@@ -2,6 +2,12 @@
 
 Preview of Spring Cloud Lattice implementation
 
+### Temporary pre-setup
+
+1. `git clone git@github.com:spencergibb/receptor-client.git`
+1. `git checkout idea-java6`
+1. `./gradlew clean build install -x test`
+
 ### Running the sample
 
 1. [Install lattice](http://lattice.cf/docs/getting-started.html)
