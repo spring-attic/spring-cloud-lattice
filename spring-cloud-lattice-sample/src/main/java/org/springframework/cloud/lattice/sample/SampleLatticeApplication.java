@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @CommonsLog
 public class SampleLatticeApplication {
 
-	// public static final String CLIENT_NAME = "testLatticeApp";
-	public static final String CLIENT_NAME = "lattice-app";
+	public static final String CLIENT_NAME = "testLatticeApp";
+	//public static final String CLIENT_NAME = "lattice-app";
 
 	@Autowired
 	LoadBalancerClient loadBalancer;
@@ -43,8 +43,8 @@ public class SampleLatticeApplication {
 	}
 
 	@RequestMapping("/")
-	public ServiceInstance lb() {
-		return loadBalancer.choose(CLIENT_NAME);
+	public ServiceInstance lb(@RequestParam(value = "service", defaultValue = CLIENT_NAME) String serviceId) {
+		return loadBalancer.choose(serviceId);
 	}
 
 	@RequestMapping("/myenv")
