@@ -18,6 +18,8 @@ Preview of Spring Cloud Lattice implementation
 
 ### Running the sample ON LATTICE
 
+Replace `<yourdockerhubid>` below with your docker hub id.
+
 1. `cd spring-cloud-lattice-sample`
 1. `mvn --settings .settings.xml clean package docker:build`
 1. `docker tag spring-cloud-lattice-sample:latest <yourdockerhubid>/spring-cloud-lattice-sample`
