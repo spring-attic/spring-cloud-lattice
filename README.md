@@ -21,7 +21,7 @@ Preview of Spring Cloud Lattice implementation
 Replace `<yourdockerhubid>` below with your docker hub id.
 
 1. `cd spring-cloud-lattice-sample`
-1. `mvn --settings .settings.xml clean package docker:build`
+1. `mvn --settings ../.settings.xml clean package docker:build`
 1. `docker tag spring-cloud-lattice-sample:latest <yourdockerhubid>/spring-cloud-lattice-sample`
 1. `docker push <yourdockerhubid>/spring-cloud-lattice-sample`
 1. `LATTICE_CLI_TIMEOUT=180 ltc create spring-cloud-lattice-sample spencergibb/spring-cloud-lattice-sample`
