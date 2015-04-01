@@ -8,3 +8,6 @@ org.springframework.cloud.lattice.discovery.LatticeDiscoveryClientConfiguration
 # Application Listeners
 org.springframework.context.ApplicationListener=\
 org.springframework.cloud.lattice.discovery.LatticeApplicationListener
+
+org.springframework.cloud.bootstrap.BootstrapConfiguration=\
+org.springframework.cloud.lattice.discovery.config.DiscoverConfigServerBootstrapConfiguration

@@ -11,7 +11,7 @@ Preview of Spring Cloud Lattice implementation
 
 1. [Install lattice](http://lattice.cf/docs/getting-started.html)
 2. Follow the getting started guide, including scaling `lattice-app` to 3
-4. run `mvn  --settings .settings.xml package`
+4. run `mvn  --settings .settings.xml install`
 5. run `PROCESS_GUID=spring-cloud-lattice-sample java -jar spring-cloud-lattice-sample/target/spring-cloud-lattice-sample-1.0.0.BUILD-SNAPSHOT.jar`
 6. visit [http://localhost:8080?service=lattice-app](http://localhost:8080?service=lattice-app) verify that the 3 services rotate through as you refresh
 
@@ -37,3 +37,10 @@ with the following command
 
 Then call `http://spring-cloud-lattice-sample.192.168.11.11.xip.io/call` and it will hit
 the service running in the ide.
+
+### Config Server
+
+LATTICE_CLI_TIMEOUT=180 ltc create configserver springcloud/configserver
+LATTICE_CLI_TIMEOUT=180 ltc create configserver mstine/configserver --env SERVER_PORT=8080
+
+SPRING_CLOUD_CONFIG_SERVER_GIT_URI=

@@ -1,0 +1,11 @@
+server:
+  port: 8080
+
+#TODO remove when ltc supports PROCESS_GUID env var
+spring:
+  application:
+    name: spring-cloud-lattice-sample
+  cloud:
+    config:
+      discovery:
+        service-id: configserver
