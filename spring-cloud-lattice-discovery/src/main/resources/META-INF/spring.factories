@@ -7,4 +7,4 @@ org.springframework.cloud.lattice.discovery.LatticeDiscoveryClientConfiguration
 
 # Application Listeners
 org.springframework.context.ApplicationListener=\
-org.springframework.cloud.lattice.discovery.LatticePropertiesListener
+org.springframework.cloud.lattice.discovery.LatticeApplicationListener

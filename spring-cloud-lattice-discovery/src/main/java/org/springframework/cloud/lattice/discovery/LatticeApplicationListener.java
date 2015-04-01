@@ -12,11 +12,11 @@ import java.util.Collections;
 /**
  * @author Spencer Gibb
  */
-public class LatticePropertiesListener implements
+public class LatticeApplicationListener implements
         ApplicationListener<ApplicationEnvironmentPreparedEvent>, Ordered {
 
-    // After ConfigFileApplicationListener so values here can use those ones
-    private int order = ConfigFileApplicationListener.DEFAULT_ORDER + 1;
+    // Before ConfigFileApplicationListener
+    private int order = ConfigFileApplicationListener.DEFAULT_ORDER - 1;
 
     @Override
     public int getOrder() {
@@ -31,8 +31,7 @@ public class LatticePropertiesListener implements
             MapPropertySource propertySource = new MapPropertySource(
                     "latticeBridgeEnvironment", Collections.singletonMap(
                     "spring.application.name", processGuid));
-            environment.getPropertySources().addBefore("systemProperties",
-                    propertySource);
+            environment.getPropertySources().addLast(propertySource);
         }
     }
 }
