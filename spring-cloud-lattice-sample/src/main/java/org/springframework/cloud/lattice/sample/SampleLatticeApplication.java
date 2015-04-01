@@ -29,6 +29,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * @author Spencer Gibb
@@ -39,13 +40,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class SampleLatticeApplication {
 
 	public static final String CLIENT_NAME = "testLatticeApp";
-	//public static final String CLIENT_NAME = "lattice-app";
+	// public static final String CLIENT_NAME = "lattice-app";
 
 	@Autowired
 	LoadBalancerClient loadBalancer;
 
 	@Autowired
 	DiscoveryClient discoveryClient;
+
+	@Autowired
+	RestTemplate restTemplate;
 
 	@Autowired
 	Environment env;
@@ -59,8 +63,24 @@ public class SampleLatticeApplication {
 	}
 
 	@RequestMapping("/")
-	public ServiceInstance lb(@RequestParam(value = "service", defaultValue = CLIENT_NAME) String serviceId) {
+	public ServiceInstance lb(
+			@RequestParam(value = "service", defaultValue = CLIENT_NAME) String serviceId) {
 		return loadBalancer.choose(serviceId);
+	}
+
+	@RequestMapping("/hi")
+	public String hi() {
+		ServiceInstance instance = discoveryClient.getLocalServiceInstance();
+		String msg = instance.getServiceId() + ":" + instance.getHost() + ":"
+				+ instance.getPort();
+		log.info("/hi called: " + msg);
+		return msg;
+	}
+
+	@RequestMapping("/call")
+	public String call() {
+		return "myservice says: "
+				+ restTemplate.getForObject("http://myservice/hi", String.class);
 	}
 
 	@RequestMapping("/myenv")

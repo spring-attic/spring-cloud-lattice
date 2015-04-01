@@ -50,7 +50,7 @@ public class LatticeDiscoveryProperties {
 
 	private boolean preferIpAddress = false;
 
-    private Map<String, Route> routes = new LinkedHashMap<>();
+	private Map<String, Route> routes = new LinkedHashMap<>();
 
 	public String getHostname() {
 		return this.preferIpAddress ? this.ipAddress : this.hostname;
@@ -68,9 +68,9 @@ public class LatticeDiscoveryProperties {
 		private final String hostname;
 	}
 
-    @Data
-    private class Route {
-        private String address = "192.168.11.1";
-        private int port;
-    }
+	@Data
+	protected static class Route {
+		private String address = "192.168.11.1";
+		private int port;
+	}
 }

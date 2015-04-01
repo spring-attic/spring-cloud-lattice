@@ -24,6 +24,16 @@ Replace `<yourdockerhubid>` below with your docker hub id.
 1. `docker tag spring-cloud-lattice-sample:latest <yourdockerhubid>/spring-cloud-lattice-sample`
 1. `docker push <yourdockerhubid>/spring-cloud-lattice-sample`
 1. `LATTICE_CLI_TIMEOUT=180 ltc create spring-cloud-lattice-sample spencergibb/spring-cloud-lattice-sample`
-1. `ltc scale spring-cloud-lattice-sample 3`
+
 6. visit [http://spring-cloud-lattice-sample.192.168.11.11.xip.io?service=spring-cloud-lattice-sample](http://spring-cloud-lattice-sample.192.168.11.11.xip.io?service=spring-cloud-lattice-sample) verify that the 3 services rotate through as you refresh
 6. visit [http://spring-cloud-lattice-sample.192.168.11.11.xip.io/me](http://spring-cloud-lattice-sample.192.168.11.11.xip.io/me) verify that the 3 services rotate through as you refresh
+
+### IDE Discovery
+
+if you run SampleLatticeApplication in the IDE on port 8081 you can run it on lattice
+with the following command
+
+`LATTICE_CLI_TIMEOUT=180 ltc create spring-cloud-lattice-sample spencergibb/spring-cloud-lattice-sample -- java -jar /spring-cloud-lattice-sample.jar --spring.cloud.lattice.discovery.routes.myservice.port=8081`
+
+Then call `http://spring-cloud-lattice-sample.192.168.11.11.xip.io/call` and it will hit
+the service running in the ide.

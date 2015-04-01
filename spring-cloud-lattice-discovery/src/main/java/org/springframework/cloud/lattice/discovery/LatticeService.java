@@ -19,16 +19,18 @@ package org.springframework.cloud.lattice.discovery;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.cloud.lattice.discovery.LatticeDiscoveryProperties.Route;
+import org.springframework.core.convert.converter.Converter;
+
+import io.pivotal.receptor.client.ReceptorClient;
+import io.pivotal.receptor.commands.ActualLRPResponse;
 import io.pivotal.receptor.commands.CellResponse;
 import io.pivotal.receptor.commands.DesiredLRPCreateRequest;
 import io.pivotal.receptor.commands.DesiredLRPResponse;
 import io.pivotal.receptor.commands.DesiredLRPUpdateRequest;
 import io.pivotal.receptor.commands.TaskCreateRequest;
 import io.pivotal.receptor.commands.TaskResponse;
-import org.springframework.core.convert.converter.Converter;
-
-import io.pivotal.receptor.client.ReceptorClient;
-import io.pivotal.receptor.commands.ActualLRPResponse;
+import io.pivotal.receptor.support.Port;
 
 /**
  * @author Spencer Gibb
@@ -36,12 +38,12 @@ import io.pivotal.receptor.commands.ActualLRPResponse;
 public class LatticeService {
 
 	private ReceptorClient receptor;
-    private LatticeDiscoveryProperties props;
+	private LatticeDiscoveryProperties props;
 
-    public LatticeService(ReceptorClient receptor, LatticeDiscoveryProperties props) {
+	public LatticeService(ReceptorClient receptor, LatticeDiscoveryProperties props) {
 		this.receptor = receptor;
-        this.props = props;
-    }
+		this.props = props;
+	}
 
 	public <T> List<T> getActualLRPsByProcessGuid(String processGuid,
 			Converter<ActualLRPResponse, T> converter) {
@@ -53,86 +55,102 @@ public class LatticeService {
 			lrps.add(converted);
 		}
 
+		if (lrps.isEmpty() && props.getRoutes().containsKey(processGuid)) {
+			Route route = props.getRoutes().get(processGuid);
+			ActualLRPResponse response = new ActualLRPResponse();
+			response.setAddress(route.getAddress());
+			response.setIndex(0);
+			response.setInstanceGuid(processGuid + ":" + route.getAddress() + ":"
+					+ route.getPort());
+			Port port = new Port();
+			port.setHostPort(route.getPort());
+			response.setPorts(new Port[] { port });
+			response.setProcessGuid(processGuid);
+
+			lrps.add(converter.convert(response));
+		}
+
 		return lrps;
 	}
 
-    public void createDesiredLRP(DesiredLRPCreateRequest request) {
-        receptor.createDesiredLRP(request);
-    }
+	public void createDesiredLRP(DesiredLRPCreateRequest request) {
+		receptor.createDesiredLRP(request);
+	}
 
-    public List<ActualLRPResponse> getActualLRPsByDomain(String domain) {
-        return receptor.getActualLRPsByDomain(domain);
-    }
+	public List<ActualLRPResponse> getActualLRPsByDomain(String domain) {
+		return receptor.getActualLRPsByDomain(domain);
+	}
 
-    public List<DesiredLRPResponse> getDesiredLRPsByDomain(String domain) {
-        return receptor.getDesiredLRPsByDomain(domain);
-    }
+	public List<DesiredLRPResponse> getDesiredLRPsByDomain(String domain) {
+		return receptor.getDesiredLRPsByDomain(domain);
+	}
 
-    public List<ActualLRPResponse> getActualLRPsByProcessGuid(String processGuid) {
-        return receptor.getActualLRPsByProcessGuid(processGuid);
-    }
+	public List<ActualLRPResponse> getActualLRPsByProcessGuid(String processGuid) {
+		return receptor.getActualLRPsByProcessGuid(processGuid);
+	}
 
-    public void createTask(TaskCreateRequest request) {
-        receptor.createTask(request);
-    }
+	public void createTask(TaskCreateRequest request) {
+		receptor.createTask(request);
+	}
 
-    public void updateDesiredLRP(String processGuid, DesiredLRPUpdateRequest request) {
-        receptor.updateDesiredLRP(processGuid, request);
-    }
+	public void updateDesiredLRP(String processGuid, DesiredLRPUpdateRequest request) {
+		receptor.updateDesiredLRP(processGuid, request);
+	}
 
-    public List<CellResponse> getCells() {
-        return receptor.getCells();
-    }
+	public List<CellResponse> getCells() {
+		return receptor.getCells();
+	}
 
-    public void cancelTask(String taskGuid) {
-        receptor.cancelTask(taskGuid);
-    }
+	public void cancelTask(String taskGuid) {
+		receptor.cancelTask(taskGuid);
+	}
 
-    public List<TaskResponse> getTasksByDomain(String domain) {
-        return receptor.getTasksByDomain(domain);
-    }
+	public List<TaskResponse> getTasksByDomain(String domain) {
+		return receptor.getTasksByDomain(domain);
+	}
 
-    public void upsertDomain(String domain, int ttl) {
-        receptor.upsertDomain(domain, ttl);
-    }
+	public void upsertDomain(String domain, int ttl) {
+		receptor.upsertDomain(domain, ttl);
+	}
 
-    public List<TaskResponse> getTasks() {
-        return receptor.getTasks();
-    }
+	public List<TaskResponse> getTasks() {
+		return receptor.getTasks();
+	}
 
-    public List<ActualLRPResponse> getActualLRPs() {
-        return receptor.getActualLRPs();
-    }
+	public List<ActualLRPResponse> getActualLRPs() {
+		return receptor.getActualLRPs();
+	}
 
-    public void killActualLRPByProcessGuidAndIndex(String processGuid, int index) {
-        receptor.killActualLRPByProcessGuidAndIndex(processGuid, index);
-    }
+	public void killActualLRPByProcessGuidAndIndex(String processGuid, int index) {
+		receptor.killActualLRPByProcessGuidAndIndex(processGuid, index);
+	}
 
-    public List<DesiredLRPResponse> getDesiredLRPs() {
-        return receptor.getDesiredLRPs();
-    }
+	public List<DesiredLRPResponse> getDesiredLRPs() {
+		return receptor.getDesiredLRPs();
+	}
 
-    public String[] getDomains() {
-        return receptor.getDomains();
-    }
+	public String[] getDomains() {
+		return receptor.getDomains();
+	}
 
-    public TaskResponse getTask(String taskGuid) {
-        return receptor.getTask(taskGuid);
-    }
+	public TaskResponse getTask(String taskGuid) {
+		return receptor.getTask(taskGuid);
+	}
 
-    public DesiredLRPResponse getDesiredLRP(String processGuid) {
-        return receptor.getDesiredLRP(processGuid);
-    }
+	public DesiredLRPResponse getDesiredLRP(String processGuid) {
+		return receptor.getDesiredLRP(processGuid);
+	}
 
-    public void deleteDesiredLRP(String processGuid) {
-        receptor.deleteDesiredLRP(processGuid);
-    }
+	public void deleteDesiredLRP(String processGuid) {
+		receptor.deleteDesiredLRP(processGuid);
+	}
 
-    public void deleteTask(String taskGuid) {
-        receptor.deleteTask(taskGuid);
-    }
+	public void deleteTask(String taskGuid) {
+		receptor.deleteTask(taskGuid);
+	}
 
-    public ActualLRPResponse getActualLRPByProcessGuidAndIndex(String processGuid, int index) {
-        return receptor.getActualLRPByProcessGuidAndIndex(processGuid, index);
-    }
+	public ActualLRPResponse getActualLRPByProcessGuidAndIndex(String processGuid,
+			int index) {
+		return receptor.getActualLRPByProcessGuidAndIndex(processGuid, index);
+	}
 }
