@@ -4,6 +4,11 @@ server:
 ribbon:
   ServerListRefreshInterval: 1000
 
+#TODO remove when ltc supports PROCESS_GUID env var
+spring:
+  application:
+    name: spring-cloud-lattice-sample
+
 endpoints:
   health:
     sensitive: false
