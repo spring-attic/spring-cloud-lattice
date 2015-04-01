@@ -33,8 +33,6 @@ import com.netflix.config.DynamicPropertyFactory;
 import com.netflix.config.DynamicStringProperty;
 import com.netflix.loadbalancer.ServerList;
 
-import io.pivotal.receptor.client.ReceptorClient;
-
 /**
  * @author Spencer Gibb
  */
@@ -45,7 +43,7 @@ public class LatticeRibbonClientConfiguration {
 	private LatticeDiscoveryProperties props;
 
 	@Autowired
-	private ReceptorClient receptor;
+	private LatticeService latticeService;
 
 	@Value("${ribbon.client.name}")
 	private String serviceId = "client";
@@ -64,10 +62,14 @@ public class LatticeRibbonClientConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	public ServerList<?> ribbonServerList(IClientConfig config) {
-		LatticeServerList serverList = new LatticeServerList(props, receptor, serviceId);
+		// TODO: this is a common thing between impl, maybe ServerListFactory?
+		LatticeServerList serverList = new LatticeServerList(props, latticeService,
+				serviceId);
 		return serverList;
 	}
 
+	// TODO: preprocess, setProp, getProperty, getKey are common accross impls, move to
+	// RibbonClientConfiguration
 	@PostConstruct
 	public void preprocess() {
 		// FIXME: what should this be?

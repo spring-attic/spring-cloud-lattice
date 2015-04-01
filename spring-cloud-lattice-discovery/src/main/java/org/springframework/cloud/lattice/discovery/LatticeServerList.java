@@ -1,14 +1,30 @@
+/*
+ * Copyright 2013-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.cloud.lattice.discovery;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import lombok.SneakyThrows;
 
+import org.springframework.core.convert.converter.Converter;
+
 import com.netflix.client.config.IClientConfig;
 import com.netflix.loadbalancer.AbstractServerList;
 
-import io.pivotal.receptor.client.ReceptorClient;
 import io.pivotal.receptor.commands.ActualLRPResponse;
 
 /**
@@ -17,13 +33,13 @@ import io.pivotal.receptor.commands.ActualLRPResponse;
 public class LatticeServerList extends AbstractServerList<LatticeServer> {
 
 	private LatticeDiscoveryProperties props;
-	private ReceptorClient receptor;
+	private LatticeService latticeService;
 	private String serviceId;
 
-	public LatticeServerList(LatticeDiscoveryProperties props, ReceptorClient receptor,
-			String serviceId) {
+	public LatticeServerList(LatticeDiscoveryProperties props,
+			LatticeService latticeService, String serviceId) {
 		this.props = props;
-		this.receptor = receptor;
+		this.latticeService = latticeService;
 		this.serviceId = serviceId;
 	}
 
@@ -44,16 +60,15 @@ public class LatticeServerList extends AbstractServerList<LatticeServer> {
 
 	@SneakyThrows
 	private List<LatticeServer> getServers() {
-		List<ActualLRPResponse> responses = receptor
-				.getActualLRPsByProcessGuid(serviceId);
-
-		List<LatticeServer> servers = new ArrayList<>();
-
-		for (ActualLRPResponse response : responses) {
-			servers.add(new LatticeServer(response.getProcessGuid(), response
-					.getInstanceGuid(), response.getAddress(), ""
-					+ response.getPorts()[0].getHostPort()));
-		}
+		List<LatticeServer> servers = latticeService.getActualLRPsByProcessGuid(
+				serviceId, new Converter<ActualLRPResponse, LatticeServer>() {
+					@Override
+					public LatticeServer convert(ActualLRPResponse response) {
+						return new LatticeServer(response.getProcessGuid(), response
+								.getInstanceGuid(), response.getAddress(), String
+								.valueOf(response.getPorts()[0].getHostPort()));
+					}
+				});
 
 		return servers;
 	}
