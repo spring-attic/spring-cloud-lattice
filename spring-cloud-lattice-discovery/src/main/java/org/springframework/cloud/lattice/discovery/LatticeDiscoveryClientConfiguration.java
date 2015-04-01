@@ -1,16 +1,11 @@
 package org.springframework.cloud.lattice.discovery;
 
-import java.util.Collections;
-
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.MapPropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import io.pivotal.receptor.client.ReceptorClient;
@@ -21,8 +16,7 @@ import io.pivotal.receptor.client.ReceptorClient;
 @Configuration
 @EnableScheduling
 @EnableConfigurationProperties
-public class LatticeDiscoveryClientConfiguration implements ApplicationContextAware,
-		SmartInitializingSingleton {
+public class LatticeDiscoveryClientConfiguration implements ApplicationContextAware {
 
 	private ApplicationContext applicationContext;
 
@@ -45,21 +39,5 @@ public class LatticeDiscoveryClientConfiguration implements ApplicationContextAw
 	public void setApplicationContext(ApplicationContext applicationContext)
 			throws BeansException {
 		this.applicationContext = applicationContext;
-	}
-
-	@Override
-	public void afterSingletonsInstantiated() {
-		if (this.applicationContext.getEnvironment() instanceof ConfigurableEnvironment) {
-			final ConfigurableEnvironment environment = (ConfigurableEnvironment) this.applicationContext
-					.getEnvironment();
-			Object processGuid = System.getenv("PROCESS_GUID");
-			if (processGuid != null) {
-				MapPropertySource propertySource = new MapPropertySource(
-						"Spring Cloud Lattice Environment", Collections.singletonMap(
-								"spring.application.name", processGuid));
-				environment.getPropertySources().addBefore("systemProperties",
-						propertySource);
-			}
-		}
 	}
 }
