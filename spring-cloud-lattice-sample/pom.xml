@@ -14,13 +14,17 @@
         <version>1.0.0.BUILD-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
+    
+    <properties>
+    	<docker.image.prefix>springcloud</docker.image.prefix>
+    </properties>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>1.2.1.RELEASE</version>
+                <version>1.2.3.RELEASE</version>
                 <executions>
                     <execution>
                         <goals>
@@ -42,7 +46,7 @@
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>0.2.3</version>
 				<configuration>
-					<imageName>${project.artifactId}</imageName>
+					<imageName>${docker.image.prefix}/${project.artifactId}:${project.version}</imageName>
 					<dockerDirectory>src/main/docker</dockerDirectory>
 					<resources>
 						<resource>
