@@ -30,8 +30,8 @@ import io.pivotal.receptor.client.ReceptorClient;
 public class LatticeDiscoveryClientConfiguration {
 
 	@Bean
-	public LatticeService latticeService() {
-		return new LatticeService(receptorClient(), latticeDiscoveryProperties());
+	public ReceptorService receptorService() {
+		return new ReceptorService(receptorClient(), latticeDiscoveryProperties());
 	}
 
 	@Bean
@@ -41,7 +41,7 @@ public class LatticeDiscoveryClientConfiguration {
 
 	@Bean
 	public LatticeDiscoveryClient latticeDiscoveryClient() {
-		return new LatticeDiscoveryClient(latticeService());
+		return new LatticeDiscoveryClient(receptorService(), receptorClient());
 	}
 
 	@Bean

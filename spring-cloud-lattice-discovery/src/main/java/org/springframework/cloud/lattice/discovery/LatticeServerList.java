@@ -33,13 +33,13 @@ import io.pivotal.receptor.commands.ActualLRPResponse;
 public class LatticeServerList extends AbstractServerList<LatticeServer> {
 
 	private LatticeDiscoveryProperties props;
-	private LatticeService latticeService;
+	private ReceptorService receptorService;
 	private String serviceId;
 
 	public LatticeServerList(LatticeDiscoveryProperties props,
-			LatticeService latticeService, String serviceId) {
+			ReceptorService receptorService, String serviceId) {
 		this.props = props;
-		this.latticeService = latticeService;
+		this.receptorService = receptorService;
 		this.serviceId = serviceId;
 	}
 
@@ -60,7 +60,7 @@ public class LatticeServerList extends AbstractServerList<LatticeServer> {
 
 	@SneakyThrows
 	private List<LatticeServer> getServers() {
-		List<LatticeServer> servers = latticeService.getActualLRPsByProcessGuid(
+		List<LatticeServer> servers = receptorService.getActualLRPsByProcessGuid(
 				serviceId, new Converter<ActualLRPResponse, LatticeServer>() {
 					@Override
 					public LatticeServer convert(ActualLRPResponse response) {

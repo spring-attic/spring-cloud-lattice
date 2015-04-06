@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import io.pivotal.receptor.client.ReceptorClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;
@@ -33,9 +34,10 @@ import io.pivotal.receptor.commands.ActualLRPResponse;
  */
 public class LatticeDiscoveryClient implements DiscoveryClient {
 
-	private LatticeService latticeService;
+	private final ReceptorService receptorService;
+    private final ReceptorClient receptorClient;
 
-	@Value("${spring.application.name}")
+    @Value("${spring.application.name}")
 	private String serviceId;
 
 	@Value("${cf.instance.ip:127.0.0.1}")
@@ -44,9 +46,10 @@ public class LatticeDiscoveryClient implements DiscoveryClient {
 	@Value("${cf.instance.port:${server.port}}")
 	private int port;
 
-	public LatticeDiscoveryClient(LatticeService latticeService) {
-		this.latticeService = latticeService;
-	}
+	public LatticeDiscoveryClient(ReceptorService receptorService,  ReceptorClient receptorClient) {
+		this.receptorService = receptorService;
+        this.receptorClient = receptorClient;
+    }
 
 	@Override
 	public String description() {
@@ -60,7 +63,7 @@ public class LatticeDiscoveryClient implements DiscoveryClient {
 
 	@Override
 	public List<ServiceInstance> getInstances(final String serviceId) {
-		List<ServiceInstance> instances = latticeService.getActualLRPsByProcessGuid(
+		List<ServiceInstance> instances = receptorService.getActualLRPsByProcessGuid(
 				serviceId, new Converter<ActualLRPResponse, ServiceInstance>() {
 					@Override
 					public ServiceInstance convert(ActualLRPResponse response) {
@@ -76,7 +79,7 @@ public class LatticeDiscoveryClient implements DiscoveryClient {
 	@Override
 	public List<String> getServices() {
 		LinkedHashSet<String> services = new LinkedHashSet<>();
-		List<ActualLRPResponse> responses = latticeService.getActualLRPs();
+		List<ActualLRPResponse> responses = receptorClient.getActualLRPs();
 
 		for (ActualLRPResponse response : responses) {
 			services.add(response.getProcessGuid());

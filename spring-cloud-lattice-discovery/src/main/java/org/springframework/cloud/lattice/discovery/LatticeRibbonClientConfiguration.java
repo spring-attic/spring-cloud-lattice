@@ -43,7 +43,7 @@ public class LatticeRibbonClientConfiguration {
 	private LatticeDiscoveryProperties props;
 
 	@Autowired
-	private LatticeService latticeService;
+	private ReceptorService receptorService;
 
 	@Value("${ribbon.client.name}")
 	private String serviceId = "client";
@@ -63,7 +63,7 @@ public class LatticeRibbonClientConfiguration {
 	@ConditionalOnMissingBean
 	public ServerList<?> ribbonServerList(IClientConfig config) {
 		// TODO: this is a common thing between impl, maybe ServerListFactory?
-		LatticeServerList serverList = new LatticeServerList(props, latticeService,
+		LatticeServerList serverList = new LatticeServerList(props, receptorService,
 				serviceId);
 		return serverList;
 	}
