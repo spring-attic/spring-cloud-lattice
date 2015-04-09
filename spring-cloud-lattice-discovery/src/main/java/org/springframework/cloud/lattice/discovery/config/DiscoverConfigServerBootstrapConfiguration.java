@@ -94,6 +94,7 @@ public class DiscoverConfigServerBootstrapConfiguration implements
             List<ServiceInstance> instances = discovery.getInstances(this.config.getDiscovery().getServiceId());
             if (instances == null || instances.isEmpty()) {
                 log.warn("Unable to locate an instance of " + this.config.getDiscovery().getServiceId());
+                return;
             }
             ServiceInstance instance = instances.iterator().next();
             String url = instance.getUri().toString();
@@ -114,7 +115,7 @@ public class DiscoverConfigServerBootstrapConfiguration implements
 			}
 			*/
 			this.config.setUri(url);
-            log.debug("Found configserver url: "+url);
+			log.debug("Found configserver url: "+url);
 		}
 		catch (Exception ex) {
 			log.warn("Could not locate configserver via discovery", ex);
