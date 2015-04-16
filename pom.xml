@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.springframework.cloud</groupId>
 		<artifactId>spring-cloud-build</artifactId>
-		<version>1.0.0.BUILD-SNAPSHOT</version>
+		<version>1.0.1.BUILD-SNAPSHOT</version>
 		<relativePath/>
 		<!-- lookup parent from repository -->
 	</parent>
@@ -35,91 +35,30 @@
 		<module>spring-cloud-lattice-sample</module>
 	</modules>
 
-	<repositories>
-	</repositories>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-starter-parent</artifactId>
-				<version>1.0.0.BUILD-SNAPSHOT</version>
+				<artifactId>spring-cloud-netflix</artifactId>
+				<version>1.0.1.BUILD-SNAPSHOT</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-commons</artifactId>
-				<version>1.0.0.BUILD-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-lattice-discovery</artifactId>
-				<version>1.0.0.BUILD-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-netflix-core</artifactId>
-				<version>1.0.0.BUILD-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>com.netflix.ribbon</groupId>
-				<artifactId>ribbon</artifactId>
-				<version>${ribbon.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.netflix.ribbon</groupId>
-				<artifactId>ribbon-core</artifactId>
-				<version>${ribbon.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.netflix.ribbon</groupId>
-				<artifactId>ribbon-loadbalancer</artifactId>
-				<version>${ribbon.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.netflix.ribbon</groupId>
-				<artifactId>ribbon-httpclient</artifactId>
-				<version>${ribbon.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.netflix.archaius</groupId>
-				<artifactId>archaius-core</artifactId>
-				<version>${archaius.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.pivotal.receptor</groupId>
 				<artifactId>receptor-client</artifactId>
 				<version>${receptor.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>org.projectlombok</groupId>
-				<artifactId>lombok</artifactId>
-				<version>1.12.6</version>
-				<scope>provided</scope>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 
 	<properties>
-		<archaius.version>0.6.5</archaius.version>
-		<feign.version>8.1.0</feign.version>
-		<ribbon.version>2.0.0</ribbon.version>
 		<receptor.version>0.0.1-SNAPSHOT</receptor.version>
 	</properties>
 
