@@ -57,12 +57,12 @@ public class SampleLatticeApplication {
 	@Autowired(required = false)
 	RelaxedPropertyResolver resolver;
 
-	@RequestMapping("/me")
+	@RequestMapping("/")
 	public ServiceInstance me() {
 		return discoveryClient.getLocalServiceInstance();
 	}
 
-	@RequestMapping("/")
+	@RequestMapping("/lb")
 	public ServiceInstance lb(
 			@RequestParam(value = "service", defaultValue = CLIENT_NAME) String serviceId) {
 		return loadBalancer.choose(serviceId);
