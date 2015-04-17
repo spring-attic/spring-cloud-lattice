@@ -4,7 +4,7 @@ server:
 #TODO remove when ltc supports PROCESS_GUID env var
 spring:
   application:
-    name: spring-cloud-lattice-sample
+    name: ${PROCESS_GUID:spring-cloud-lattice-sample}
   cloud:
     config:
       discovery:
