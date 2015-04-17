@@ -16,6 +16,9 @@
 
 package org.springframework.cloud.lattice.sample;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.extern.apachecommons.CommonsLog;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +42,7 @@ import org.springframework.web.client.RestTemplate;
 @CommonsLog
 public class SampleLatticeApplication {
 
-	public static final String CLIENT_NAME = "testLatticeApp";
+	public static final String CLIENT_NAME = "myservice";
 	// public static final String CLIENT_NAME = "lattice-app";
 
 	@Autowired
@@ -60,6 +63,15 @@ public class SampleLatticeApplication {
 	@RequestMapping("/me")
 	public ServiceInstance me() {
 		return discoveryClient.getLocalServiceInstance();
+	}
+
+	@RequestMapping("/services")
+	public List<ServiceInstance> services() {
+		List<ServiceInstance> list = new ArrayList<ServiceInstance>();
+		for (String id : discoveryClient.getServices()) {
+			list.addAll(discoveryClient.getInstances(id));
+		}
+		return list ;
 	}
 
 	@RequestMapping("/")
