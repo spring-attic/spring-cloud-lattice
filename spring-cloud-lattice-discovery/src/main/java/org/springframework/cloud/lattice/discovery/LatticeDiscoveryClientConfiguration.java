@@ -16,11 +16,14 @@
 
 package org.springframework.cloud.lattice.discovery;
 
+import io.pivotal.receptor.client.ReceptorClient;
+
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import io.pivotal.receptor.client.ReceptorClient;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Spencer Gibb
@@ -36,7 +39,20 @@ public class LatticeDiscoveryClientConfiguration {
 
 	@Bean
 	public ReceptorClient receptorClient() {
-		return new ReceptorClient(latticeDiscoveryProperties().getReceptorHost());
+		if (!StringUtils
+				.hasText(latticeDiscoveryProperties().getReceptor().getUsername())) {
+			return new ReceptorClient(latticeDiscoveryProperties().getReceptor()
+					.getHost());
+		}
+		return new ReceptorClient(latticeDiscoveryProperties().getReceptor().getHost(),
+				getClientRequestFactory(latticeDiscoveryProperties()));
+	}
+
+	private ClientHttpRequestFactory getClientRequestFactory(
+			LatticeDiscoveryProperties properties) {
+		String username = properties.getReceptor().getUsername();
+		String password = properties.getReceptor().getPassword();
+		return new TestRestTemplate(username, password).getRequestFactory();
 	}
 
 	@Bean
@@ -48,4 +64,5 @@ public class LatticeDiscoveryClientConfiguration {
 	public LatticeDiscoveryProperties latticeDiscoveryProperties() {
 		return new LatticeDiscoveryProperties();
 	}
+
 }
