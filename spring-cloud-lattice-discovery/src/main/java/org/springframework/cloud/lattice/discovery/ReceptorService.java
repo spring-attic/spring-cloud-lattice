@@ -18,16 +18,19 @@ package org.springframework.cloud.lattice.discovery;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.cloud.lattice.discovery.LatticeDiscoveryProperties.Route;
 import org.springframework.core.convert.converter.Converter;
 
 import io.pivotal.receptor.client.ReceptorClient;
 import io.pivotal.receptor.commands.ActualLRPResponse;
+import io.pivotal.receptor.commands.DesiredLRPResponse;
 import io.pivotal.receptor.support.Port;
 
 /**
  * @author Spencer Gibb
+ * @author Dave Syer
  */
 public class ReceptorService {
 
@@ -41,15 +44,36 @@ public class ReceptorService {
 
 	public <T> List<T> getActualLRPsByProcessGuid(String processGuid,
 			Converter<ActualLRPResponse, T> converter) {
-		List<ActualLRPResponse> responses = receptor
-				.getActualLRPsByProcessGuid(processGuid);
+		List<ActualLRPResponse> responses = getResponses(processGuid);
 		List<T> lrps = new ArrayList<>();
 		for (ActualLRPResponse response : responses) {
 			T converted = converter.convert(response);
 			lrps.add(converted);
 		}
+		return lrps;
+	}
 
-		if (lrps.isEmpty() && props.getRoutes().containsKey(processGuid)) {
+	private List<ActualLRPResponse> getResponses(String processGuid) {
+		List<ActualLRPResponse> responses = new ArrayList<ActualLRPResponse>();
+		if (!props.getReceptor().isUseRouterAddresses()) {
+			receptor.getActualLRPsByProcessGuid(processGuid);
+		}
+		else {
+			DesiredLRPResponse desired = receptor.getDesiredLRP(processGuid);
+			if (desired != null) {
+				ActualLRPResponse response = new ActualLRPResponse();
+				String address = getAddress(desired);
+				response.setAddress(address);
+				response.setIndex(0);
+				response.setInstanceGuid(processGuid + ":" + address);
+				Port port = new Port();
+				port.setHostPort(80);
+				response.setPorts(new Port[] { port });
+				response.setProcessGuid(processGuid);
+				responses.add(response);
+			}
+		}
+		if (responses.isEmpty() && props.getRoutes().containsKey(processGuid)) {
 			Route route = props.getRoutes().get(processGuid);
 			ActualLRPResponse response = new ActualLRPResponse();
 			response.setAddress(route.getAddress());
@@ -60,10 +84,16 @@ public class ReceptorService {
 			port.setHostPort(route.getPort());
 			response.setPorts(new Port[] { port });
 			response.setProcessGuid(processGuid);
-
-			lrps.add(converter.convert(response));
 		}
 
-		return lrps;
+		return responses;
+	}
+
+	private String getAddress(DesiredLRPResponse desired) {
+		Map<String, io.pivotal.receptor.support.Route[]> routes = desired.getRoutes();
+		if (routes.isEmpty()) {
+			return "<UNKNOWN>";
+		}
+		return routes.values().iterator().next()[0].getHostnames()[0];
 	}
 }

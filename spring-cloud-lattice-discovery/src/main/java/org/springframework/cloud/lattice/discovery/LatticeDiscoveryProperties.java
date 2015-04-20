@@ -25,7 +25,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
-import lombok.extern.apachecommons.CommonsLog;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -34,7 +33,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties("spring.cloud.lattice.discovery")
 @Data
-@CommonsLog
 public class LatticeDiscoveryProperties {
 	private boolean enabled = true;
 
@@ -79,5 +77,6 @@ public class LatticeDiscoveryProperties {
 		private String host = "receptor.192.168.11.11.xip.io";
 		private String username;
 		private String password;
+		private boolean useRouterAddress;
 	}
 }
