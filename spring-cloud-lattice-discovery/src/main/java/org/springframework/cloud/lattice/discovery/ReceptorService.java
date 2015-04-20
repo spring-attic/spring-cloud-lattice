@@ -16,17 +16,17 @@
 
 package org.springframework.cloud.lattice.discovery;
 
+import io.pivotal.receptor.client.ReceptorClient;
+import io.pivotal.receptor.commands.ActualLRPResponse;
+import io.pivotal.receptor.commands.DesiredLRPResponse;
+import io.pivotal.receptor.support.Port;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.cloud.lattice.discovery.LatticeDiscoveryProperties.Route;
 import org.springframework.core.convert.converter.Converter;
-
-import io.pivotal.receptor.client.ReceptorClient;
-import io.pivotal.receptor.commands.ActualLRPResponse;
-import io.pivotal.receptor.commands.DesiredLRPResponse;
-import io.pivotal.receptor.support.Port;
 
 /**
  * @author Spencer Gibb
@@ -55,7 +55,7 @@ public class ReceptorService {
 
 	private List<ActualLRPResponse> getResponses(String processGuid) {
 		List<ActualLRPResponse> responses = new ArrayList<ActualLRPResponse>();
-		if (!props.getReceptor().isUseRouterAddresses()) {
+		if (!props.getReceptor().isUseRouterAddress()) {
 			receptor.getActualLRPsByProcessGuid(processGuid);
 		}
 		else {
