@@ -16,16 +16,15 @@
 
 package org.springframework.cloud.lattice.discovery;
 
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-import io.pivotal.receptor.client.ReceptorClient;
-import io.pivotal.receptor.client.ReceptorOperations;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +41,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
+import io.pivotal.receptor.client.ReceptorClient;
+import io.pivotal.receptor.client.ReceptorOperations;
 import io.pivotal.receptor.commands.ActualLRPResponse;
 import io.pivotal.receptor.commands.DesiredLRPResponse;
 
@@ -56,11 +57,7 @@ public class LatticeVcapApplicationListenerTests {
 
 	public static final String APP_NAME = "testVcapListenerApp";
 	public static final String INSTANCE_GUID = "abcd1234";
-	@Value("classpath:/vcap-test/dlrp.json")
-	private Resource dlrpJson;
 
-	@Value("classpath:/vcap-test/alrp.json")
-	private Resource alrpJson;
 
 	@Autowired
 	private ReceptorOperations receptor;
@@ -71,22 +68,8 @@ public class LatticeVcapApplicationListenerTests {
 	@Autowired
 	private LatticeVcapApplicationListener applicationListener;
 
-	private ObjectMapper mapper = new ObjectMapper();
-
-	public LatticeVcapApplicationListenerTests() {
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-	}
-
-	@Before
-	public void setup() throws Exception {
-		List<DesiredLRPResponse> dlrpResponses = read(DesiredLRPResponse.class,
-				dlrpJson.getInputStream());
-		List<ActualLRPResponse> alrpResponses = read(ActualLRPResponse.class,
-				alrpJson.getInputStream());
-
-		when(receptor.getActualLRPs()).thenReturn(alrpResponses);
-		when(receptor.getDesiredLRPs()).thenReturn(dlrpResponses);
-	}
+	@Autowired
+	private ObjectMapper mapper;
 
 	@Test
 	public void addsVcapApplicationToEnvironment() throws Exception {
@@ -96,19 +79,47 @@ public class LatticeVcapApplicationListenerTests {
 		Map vcapApplication = mapper.readValue(vcapApplicationJson, Map.class);
 		assertEquals("name was wrong", APP_NAME, vcapApplication.get("name"));
 		assertEquals("instance_id was wrong", INSTANCE_GUID, vcapApplication.get("instance_id"));
+
+		String vcapServicesJson =  context.getEnvironment().getProperty(LatticeVcapApplicationListener.VCAP_SERVICES);
+		assertNotNull("VCAP_SERVICES was null", vcapServicesJson);
 	}
 
-	private <T> List<T> read(Class<T> aClass, InputStream inputStream)
-			throws java.io.IOException {
-		return mapper.readValue(inputStream, TypeFactory.defaultInstance()
-				.constructCollectionType(List.class, aClass));
-	}
 
 	@Configuration
 	protected static class TestConfig {
+		@Value("classpath:/vcap-test/dlrp.json")
+		private Resource dlrpJson;
+
+		@Value("classpath:/vcap-test/alrp.json")
+		private Resource alrpJson;
+
+
 		@Bean
-		public ReceptorClient receptorClient() {
-			return mock(ReceptorClient.class);
+		public ObjectMapper objectMapper() {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			return mapper;
+		}
+
+		@Bean
+		public ReceptorClient receptorClient() throws Exception {
+			ReceptorClient receptor = mock(ReceptorClient.class);
+
+			List<DesiredLRPResponse> dlrpResponses = read(DesiredLRPResponse.class,
+					dlrpJson.getInputStream());
+			List<ActualLRPResponse> alrpResponses = read(ActualLRPResponse.class,
+					alrpJson.getInputStream());
+
+			when(receptor.getActualLRPs()).thenReturn(alrpResponses);
+			when(receptor.getDesiredLRPs()).thenReturn(dlrpResponses);
+
+			return receptor;
+		}
+
+		private <T> List<T> read(Class<T> aClass, InputStream inputStream)
+				throws java.io.IOException {
+			return objectMapper().readValue(inputStream, TypeFactory.defaultInstance()
+					.constructCollectionType(List.class, aClass));
 		}
 
 		@Bean

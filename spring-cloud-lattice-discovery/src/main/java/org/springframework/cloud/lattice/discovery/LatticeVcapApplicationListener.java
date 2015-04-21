@@ -18,13 +18,15 @@ package org.springframework.cloud.lattice.discovery;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pivotal.receptor.client.ReceptorOperations;
+import io.pivotal.receptor.commands.ActualLRPResponse;
+import io.pivotal.receptor.commands.DesiredLRPResponse;
+import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.apachecommons.CommonsLog;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.boot.context.config.ConfigFileApplicationListener;
-import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.Ordered;
@@ -32,8 +34,10 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MapPropertySource;
 
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Creates VCAP_APPLICATION and VCAP_SERVICES from environment and receptor
@@ -82,14 +86,50 @@ public class LatticeVcapApplicationListener implements
 			vcapApplication.put("name", resolver.getProperty("spring.application.name"));
 			vcapApplication.put("instance_id", resolver.getProperty("instance.guid"));
 
-			Object json = mapper.writeValueAsString(vcapApplication);
-			MapPropertySource propertySource = new MapPropertySource(
-					"latticeVcap", Collections.singletonMap(
-					VCAP_APPLICATION, json));
-			env.getPropertySources().addFirst(propertySource);
+			String json = mapper.writeValueAsString(vcapApplication);
 
-			//TODO: add VCAP_SERVICES
+			Map<String, Object> map = new LinkedHashMap<>();
+			map.put(VCAP_APPLICATION, json);
+			map.put(VCAP_SERVICES, createServices());
+
+			MapPropertySource propertySource = new MapPropertySource("latticeVcap", map);
+			env.getPropertySources().addFirst(propertySource);
 		}
 		System.out.println(event);
+	}
+
+	private String createServices() throws Exception {
+		Map<String, Object> services = new LinkedHashMap<>();
+
+		Map<String, LRP> lrps = new LinkedHashMap<>();
+		List<ActualLRPResponse> actualLRPs = receptor.getActualLRPs();
+		List<DesiredLRPResponse> desiredLRPs = receptor.getDesiredLRPs();
+
+		for (ActualLRPResponse alrp : actualLRPs) {
+			lrps.put(alrp.getProcessGuid(), new LRP(alrp.getProcessGuid(), alrp));
+		}
+
+		for (DesiredLRPResponse dlrp : desiredLRPs) {
+			if (lrps.containsKey(dlrp.getProcessGuid())) {
+				lrps.get(dlrp.getProcessGuid()).setDlrp(dlrp);
+			}
+		}
+
+		for (LRP lrp : lrps.values()) {
+			if (lrp.getDlrp() != null) {
+				HashMap<String, String> map = new HashMap<>();
+				//TODO: Populate service object
+				services.put(lrp.getProcessGuid(), map);
+			}
+		}
+
+		return mapper.writeValueAsString(services);
+	}
+
+	@Data
+	private class LRP {
+		final String processGuid;
+		final ActualLRPResponse alrp;
+		DesiredLRPResponse dlrp;
 	}
 }
