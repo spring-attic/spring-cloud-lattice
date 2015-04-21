@@ -54,7 +54,7 @@ public class ReceptorService {
 	}
 
 	private List<ActualLRPResponse> getResponses(String processGuid) {
-		List<ActualLRPResponse> responses = new ArrayList<ActualLRPResponse>();
+		List<ActualLRPResponse> responses = new ArrayList<>();
 		if (!props.getReceptor().isUseRouterAddress()) {
 			receptor.getActualLRPsByProcessGuid(processGuid);
 		}

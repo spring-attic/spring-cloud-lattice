@@ -1,0 +1,68 @@
+[
+    {
+        "process_guid": "redis",
+        "instance_guid": "acdb387f-cc13-45d0-777b-5d697d34c9fd",
+        "cell_id": "lattice-cell-01",
+        "domain": "lattice",
+        "index": 0,
+        "address": "192.168.11.11",
+        "ports": [
+            {
+                "container_port": 6379,
+                "host_port": 61001
+            }
+        ],
+        "state": "RUNNING",
+        "crash_count": 0,
+        "since": 1429561928335848700,
+        "evacuating": false,
+        "modification_tag": {
+            "epoch": "95a2c14e-7ac1-484a-7ef5-e4cc8bcbf308",
+            "index": 2
+        }
+    },
+    {
+        "process_guid": "rabbit",
+        "instance_guid": "cc0a0912-8262-4e7a-4c50-39b2a2cca180",
+        "cell_id": "lattice-cell-01",
+        "domain": "lattice",
+        "index": 0,
+        "address": "192.168.11.11",
+        "ports": [
+            {
+                "container_port": 5672,
+                "host_port": 61002
+            }
+        ],
+        "state": "RUNNING",
+        "crash_count": 0,
+        "since": 1429562034084270600,
+        "evacuating": false,
+        "modification_tag": {
+            "epoch": "6885eb4b-9bee-4a94-78a3-cc553caa0dcb",
+            "index": 2
+        }
+    },
+    {
+        "process_guid": "mysql",
+        "instance_guid": "d8fb99c4-8037-476a-6ef1-7c9d184be05f",
+        "cell_id": "lattice-cell-01",
+        "domain": "lattice",
+        "index": 0,
+        "address": "192.168.11.11",
+        "ports": [
+            {
+                "container_port": 3306,
+                "host_port": 61003
+            }
+        ],
+        "state": "RUNNING",
+        "crash_count": 0,
+        "since": 1429562159451845000,
+        "evacuating": false,
+        "modification_tag": {
+            "epoch": "70045c14-8d67-4fb9-67a4-115b4f0ff99f",
+            "index": 2
+        }
+    }
+]

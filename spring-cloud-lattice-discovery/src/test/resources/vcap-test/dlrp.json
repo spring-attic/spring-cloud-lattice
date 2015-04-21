@@ -1,0 +1,225 @@
+[
+    {
+        "setup": {
+            "download": {
+                "from": "http://file_server.service.dc1.consul:8080/v1/static/healthcheck.tgz",
+                "to": "/tmp",
+                "cache_key": ""
+            }
+        },
+        "action": {
+            "run": {
+                "path": "/entrypoint.sh",
+                "args": [
+                    "redis-server"
+                ],
+                "dir": "/data",
+                "env": null,
+                "resource_limits": {},
+                "privileged": true
+            }
+        },
+        "monitor": {
+            "run": {
+                "path": "/tmp/healthcheck",
+                "args": [
+                    "-port",
+                    "6379"
+                ],
+                "env": null,
+                "resource_limits": {},
+                "log_source": "HEALTH"
+            }
+        },
+        "process_guid": "redis",
+        "domain": "lattice",
+        "rootfs": "docker:///library/redis#latest",
+        "instances": 1,
+        "env": [
+            {
+                "name": "PROCESS_GUID",
+                "value": "redis"
+            },
+            {
+                "name": "PORT",
+                "value": "6379"
+            }
+        ],
+        "start_timeout": 0,
+        "disk_mb": 1024,
+        "memory_mb": 128,
+        "cpu_weight": 100,
+        "privileged": true,
+        "ports": [
+            6379
+        ],
+        "routes": {
+            "cf-router": [
+                {
+                    "hostnames": [
+                        "redis.192.168.11.11.xip.io",
+                        "redis-6379.192.168.11.11.xip.io"
+                    ],
+                    "port": 6379
+                }
+            ]
+        },
+        "log_guid": "redis",
+        "log_source": "APP",
+        "metrics_guid": "",
+        "modification_tag": {
+            "epoch": "93f52bf6-bff9-41a4-4e8b-364797ccb8d8",
+            "index": 0
+        }
+    },
+    {
+        "setup": {
+            "download": {
+                "from": "http://file_server.service.dc1.consul:8080/v1/static/healthcheck.tgz",
+                "to": "/tmp",
+                "cache_key": ""
+            }
+        },
+        "action": {
+            "run": {
+                "path": "/docker-entrypoint.sh",
+                "args": [
+                    "rabbitmq-server"
+                ],
+                "dir": "/",
+                "env": null,
+                "resource_limits": {},
+                "privileged": true
+            }
+        },
+        "monitor": {
+            "run": {
+                "path": "/tmp/healthcheck",
+                "args": [
+                    "-port",
+                    "5672"
+                ],
+                "env": null,
+                "resource_limits": {},
+                "log_source": "HEALTH"
+            }
+        },
+        "process_guid": "rabbit",
+        "domain": "lattice",
+        "rootfs": "docker:///library/rabbitmq#latest",
+        "instances": 1,
+        "env": [
+            {
+                "name": "PROCESS_GUID",
+                "value": "rabbit"
+            },
+            {
+                "name": "PORT",
+                "value": "5672"
+            }
+        ],
+        "start_timeout": 0,
+        "disk_mb": 1024,
+        "memory_mb": 128,
+        "cpu_weight": 100,
+        "privileged": true,
+        "ports": [
+            5672
+        ],
+        "routes": {
+            "cf-router": [
+                {
+                    "hostnames": [
+                        "rabbit.192.168.11.11.xip.io",
+                        "rabbit-5672.192.168.11.11.xip.io"
+                    ],
+                    "port": 5672
+                }
+            ]
+        },
+        "log_guid": "rabbit",
+        "log_source": "APP",
+        "metrics_guid": "",
+        "modification_tag": {
+            "epoch": "0fe8b9f0-24af-49dd-5640-8931bc2041e3",
+            "index": 0
+        }
+    },
+    {
+        "setup": {
+            "download": {
+                "from": "http://file_server.service.dc1.consul:8080/v1/static/healthcheck.tgz",
+                "to": "/tmp",
+                "cache_key": ""
+            }
+        },
+        "action": {
+            "run": {
+                "path": "/entrypoint.sh",
+                "args": [
+                    "mysqld"
+                ],
+                "dir": "/",
+                "env": null,
+                "resource_limits": {},
+                "privileged": true
+            }
+        },
+        "monitor": {
+            "run": {
+                "path": "/tmp/healthcheck",
+                "args": [
+                    "-port",
+                    "3306"
+                ],
+                "env": null,
+                "resource_limits": {},
+                "log_source": "HEALTH"
+            }
+        },
+        "process_guid": "mysql",
+        "domain": "lattice",
+        "rootfs": "docker:///library/mysql#latest",
+        "instances": 1,
+        "env": [
+            {
+                "name": "PROCESS_GUID",
+                "value": "mysql"
+            },
+            {
+                "name": "MYSQL_ROOT_PASSWORD",
+                "value": "password"
+            },
+            {
+                "name": "PORT",
+                "value": "3306"
+            }
+        ],
+        "start_timeout": 0,
+        "disk_mb": 1024,
+        "memory_mb": 128,
+        "cpu_weight": 100,
+        "privileged": true,
+        "ports": [
+            3306
+        ],
+        "routes": {
+            "cf-router": [
+                {
+                    "hostnames": [
+                        "mysql.192.168.11.11.xip.io",
+                        "mysql-3306.192.168.11.11.xip.io"
+                    ],
+                    "port": 3306
+                }
+            ]
+        },
+        "log_guid": "mysql",
+        "log_source": "APP",
+        "metrics_guid": "",
+        "modification_tag": {
+            "epoch": "3d4df6bc-aecf-4bc4-7820-64b6c97f04ac",
+            "index": 0
+        }
+    }
+]
