@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.springframework.cloud.lattice.discovery;
+package org.springframework.cloud.lattice.discovery.vcap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -50,10 +50,10 @@ import io.pivotal.receptor.commands.DesiredLRPResponse;
  * @author Spencer Gibb
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = LatticeVcapApplicationListenerTests.TestConfig.class)
-@TestPropertySource(properties = {"spring.application.name="+ LatticeVcapApplicationListenerTests.APP_NAME,
-		"instance.guid="+ LatticeVcapApplicationListenerTests.INSTANCE_GUID})
-public class LatticeVcapApplicationListenerTests {
+@ContextConfiguration(classes = VcapBootstrapApplicationListenerTests.TestConfig.class)
+@TestPropertySource(properties = {"spring.application.name="+ VcapBootstrapApplicationListenerTests.APP_NAME,
+		"instance.guid="+ VcapBootstrapApplicationListenerTests.INSTANCE_GUID})
+public class VcapBootstrapApplicationListenerTests {
 
 	public static final String APP_NAME = "testVcapListenerApp";
 	public static final String INSTANCE_GUID = "abcd1234";
@@ -66,22 +66,38 @@ public class LatticeVcapApplicationListenerTests {
 	private ConfigurableApplicationContext context;
 
 	@Autowired
-	private LatticeVcapApplicationListener applicationListener;
+	private VcapBootstrapApplicationListener applicationListener;
 
 	@Autowired
 	private ObjectMapper mapper;
 
 	@Test
 	public void addsVcapApplicationToEnvironment() throws Exception {
-		String vcapApplicationJson =  context.getEnvironment().getProperty(LatticeVcapApplicationListener.VCAP_APPLICATION);
+		String vcapApplicationJson =  context.getEnvironment().getProperty(VcapBootstrapApplicationListener.VCAP_APPLICATION);
 
-		assertNotNull("VCAP_APPLICATION was null", vcapApplicationJson);
+		assertThat(vcapApplicationJson, is(notNullValue()));
 		Map vcapApplication = mapper.readValue(vcapApplicationJson, Map.class);
-		assertEquals("name was wrong", APP_NAME, vcapApplication.get("name"));
-		assertEquals("instance_id was wrong", INSTANCE_GUID, vcapApplication.get("instance_id"));
+		assertThat(APP_NAME, equalTo(vcapApplication.get("name")));
+		assertThat(INSTANCE_GUID, equalTo(vcapApplication.get("instance_id")));
 
-		String vcapServicesJson =  context.getEnvironment().getProperty(LatticeVcapApplicationListener.VCAP_SERVICES);
-		assertNotNull("VCAP_SERVICES was null", vcapServicesJson);
+		String vcapServicesJson =  context.getEnvironment().getProperty(VcapBootstrapApplicationListener.VCAP_SERVICES);
+		assertThat(vcapServicesJson, is(notNullValue()));
+
+		Map vcapServices = mapper.readValue(vcapServicesJson, Map.class);
+
+		assertService(vcapServices, "redis");
+		assertService(vcapServices, "mysql");
+		assertService(vcapServices, "rabbit");
+	}
+
+	private void assertService(Map vcapServices, String serviceName) {
+		Object o = vcapServices.get(serviceName);
+		assertThat(o, is(notNullValue()));
+		assertThat(o, is(instanceOf(List.class)));
+		List services = List.class.cast(o);
+		assertThat(services.size(), equalTo(1));
+		Map service = Map.class.cast(services.get(0));
+		assertThat(service.get("name"), equalTo((Object) serviceName));
 	}
 
 
@@ -123,8 +139,8 @@ public class LatticeVcapApplicationListenerTests {
 		}
 
 		@Bean
-		public LatticeVcapApplicationListener latticeVcapApplicationListener() {
-			return new LatticeVcapApplicationListener();
+		public VcapBootstrapApplicationListener latticeVcapApplicationListener() {
+			return new VcapBootstrapApplicationListener();
 		}
 	}
 

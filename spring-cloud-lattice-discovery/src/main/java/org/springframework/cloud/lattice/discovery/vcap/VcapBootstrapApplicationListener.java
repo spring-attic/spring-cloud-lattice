@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package org.springframework.cloud.lattice.discovery;
+package org.springframework.cloud.lattice.discovery.vcap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pivotal.receptor.client.ReceptorOperations;
 import io.pivotal.receptor.commands.ActualLRPResponse;
 import io.pivotal.receptor.commands.DesiredLRPResponse;
-import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.apachecommons.CommonsLog;
 
@@ -34,6 +33,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MapPropertySource;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -48,7 +48,7 @@ import java.util.Map;
  * @author Spencer Gibb
  */
 @CommonsLog
-public class LatticeVcapApplicationListener implements
+public class VcapBootstrapApplicationListener implements
 		ApplicationListener<ContextRefreshedEvent>, Ordered {
 
 	static final String VCAP_APPLICATION = "VCAP_APPLICATION";
@@ -64,7 +64,7 @@ public class LatticeVcapApplicationListener implements
 	@Autowired(required = false)
 	private ObjectMapper mapper = new ObjectMapper();
 
-	public LatticeVcapApplicationListener() {}
+	public VcapBootstrapApplicationListener() {}
 
 	public void setOrder(int order) {
 		this.order = order;
@@ -117,19 +117,19 @@ public class LatticeVcapApplicationListener implements
 
 		for (LRP lrp : lrps.values()) {
 			if (lrp.getDlrp() != null) {
-				HashMap<String, String> map = new HashMap<>();
-				//TODO: Populate service object
-				services.put(lrp.getProcessGuid(), map);
+				HashMap<String, Object> map = new HashMap<>();
+				map.put("name", lrp.getProcessGuid());
+				map.put("tags", Collections.singletonList(lrp.getProcessGuid()));
+				HashMap<String, Object> credentials = new HashMap<>();
+				String uri = String.format("http://%s:%d", lrp.getAlrp().getAddress(),
+						lrp.getAlrp().getPorts()[0].getHostPort());
+				credentials.put("uri", uri);
+				map.put("credentials", credentials);
+				services.put(lrp.getProcessGuid(), Collections.singletonList(map));
 			}
 		}
 
 		return mapper.writeValueAsString(services);
 	}
 
-	@Data
-	private class LRP {
-		final String processGuid;
-		final ActualLRPResponse alrp;
-		DesiredLRPResponse dlrp;
-	}
 }
