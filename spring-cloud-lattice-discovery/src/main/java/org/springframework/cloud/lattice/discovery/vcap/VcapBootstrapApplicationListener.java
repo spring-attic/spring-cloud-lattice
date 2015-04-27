@@ -26,6 +26,7 @@ import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.boot.context.config.ConfigFileApplicationListener;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.Ordered;
@@ -56,7 +57,7 @@ public class VcapBootstrapApplicationListener implements
 	static final String VCAP_SERVICES = "VCAP_SERVICES";
 
 	// Before ConfigFileApplicationListener so values there can use these ones
-	private int order = ConfigFileApplicationListener.DEFAULT_ORDER - 2;
+	private int order = Ordered.HIGHEST_PRECEDENCE;
 
 	@Autowired
 	private ReceptorOperations receptor;
@@ -78,8 +79,14 @@ public class VcapBootstrapApplicationListener implements
 	@Override
 	@SneakyThrows
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-		Environment environment = event.getApplicationContext().getEnvironment();
+		ApplicationContext context = event.getApplicationContext();
+		Environment environment = context.getEnvironment();
 		if (environment instanceof ConfigurableEnvironment) {
+
+			if (receptor == null) {
+				receptor = context.getBean(ReceptorOperations.class);
+			}
+
 			ConfigurableEnvironment env = (ConfigurableEnvironment) environment;
 			RelaxedPropertyResolver resolver = new RelaxedPropertyResolver(env);
 			HashMap<String, String> vcapApplication = new HashMap<>();
