@@ -28,11 +28,17 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
+import org.springframework.cloud.config.java.AbstractCloudConfig;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import javax.sql.DataSource;
 
 /**
  * @author Spencer Gibb
@@ -60,6 +66,17 @@ public class SampleLatticeApplication {
 	@Autowired(required = false)
 	RelaxedPropertyResolver resolver;
 
+	@Autowired
+	DataSource dataSource;
+
+	@Configuration
+	protected static class LatticeConfig extends AbstractCloudConfig {
+		@Bean
+		DataSource dataSource() {
+			return connectionFactory().dataSource();
+		}
+	}
+
 	@RequestMapping("/me")
 	public ServiceInstance me() {
 		return discoveryClient.getLocalServiceInstance();
@@ -78,6 +95,17 @@ public class SampleLatticeApplication {
 	public ServiceInstance lb(
 			@RequestParam(value = "service", defaultValue = CLIENT_NAME) String serviceId) {
 		return loadBalancer.choose(serviceId);
+	}
+
+	@RequestMapping("/ds")
+	public String ds() {
+		return dataSource.toString();
+	}
+
+	@RequestMapping("/select")
+	public Integer selectOne() {
+		JdbcTemplate jdbc = new JdbcTemplate(dataSource);
+		return jdbc.queryForObject("SELECT 1 FROM DUAL", Integer.class);
 	}
 
 	@RequestMapping("/hi")
