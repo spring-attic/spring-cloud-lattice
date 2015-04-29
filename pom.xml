@@ -31,6 +31,7 @@
 	</scm>
 
 	<modules>
+		<module>spring-cloud-lattice-core</module>
 		<module>spring-cloud-lattice-discovery</module>
 		<module>spring-cloud-lattice-connector</module>
 		<module>spring-cloud-lattice-sample</module>
@@ -44,6 +45,11 @@
 				<version>1.0.1.BUILD-SNAPSHOT</version>
 				<type>pom</type>
 				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-lattice-core</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>

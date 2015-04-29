@@ -27,6 +27,7 @@ import org.springframework.cloud.client.discovery.event.HeartbeatEvent;
 import org.springframework.cloud.client.discovery.event.HeartbeatMonitor;
 import org.springframework.cloud.config.client.ConfigClientProperties;
 import org.springframework.cloud.config.client.ConfigServicePropertySourceLocator;
+import org.springframework.cloud.lattice.LatticeAutoConfiguration;
 import org.springframework.cloud.lattice.discovery.LatticeDiscoveryClient;
 import org.springframework.cloud.lattice.discovery.LatticeDiscoveryClientConfiguration;
 import org.springframework.context.ApplicationEvent;
@@ -47,7 +48,7 @@ import java.util.List;
 @ConditionalOnProperty(value = "spring.cloud.config.discovery.enabled", matchIfMissing = true)
 @Configuration
 @EnableDiscoveryClient
-@Import(LatticeDiscoveryClientConfiguration.class)
+@Import({LatticeAutoConfiguration.class, LatticeDiscoveryClientConfiguration.class})
 @CommonsLog
 public class DiscoverConfigServerBootstrapConfiguration implements
 		SmartApplicationListener {

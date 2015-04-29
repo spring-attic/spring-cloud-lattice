@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.cloud.lattice.LatticeProperties;
 import org.springframework.cloud.lattice.discovery.LatticeDiscoveryProperties.Route;
 import org.springframework.core.convert.converter.Converter;
 
@@ -35,11 +36,13 @@ import org.springframework.core.convert.converter.Converter;
 public class ReceptorService {
 
 	private ReceptorClient receptor;
-	private LatticeDiscoveryProperties props;
+	private LatticeProperties latticeProperties;
+	private LatticeDiscoveryProperties discoveryProperties;
 
-	public ReceptorService(ReceptorClient receptor, LatticeDiscoveryProperties props) {
+	public ReceptorService(ReceptorClient receptor, LatticeProperties latticeProperties, LatticeDiscoveryProperties discoveryProperties) {
 		this.receptor = receptor;
-		this.props = props;
+		this.latticeProperties = latticeProperties;
+		this.discoveryProperties = discoveryProperties;
 	}
 
 	public <T> List<T> getActualLRPsByProcessGuid(String processGuid,
@@ -54,8 +57,8 @@ public class ReceptorService {
 	}
 
 	private List<ActualLRPResponse> getResponses(String processGuid) {
-		List<ActualLRPResponse> responses = new ArrayList<ActualLRPResponse>();
-		if (!props.getReceptor().isUseRouterAddress()) {
+		List<ActualLRPResponse> responses = new ArrayList<>();
+		if (!latticeProperties.getReceptor().isUseRouterAddress()) {
 			receptor.getActualLRPsByProcessGuid(processGuid);
 		}
 		else {
@@ -73,8 +76,8 @@ public class ReceptorService {
 				responses.add(response);
 			}
 		}
-		if (responses.isEmpty() && props.getRoutes().containsKey(processGuid)) {
-			Route route = props.getRoutes().get(processGuid);
+		if (responses.isEmpty() && discoveryProperties.getRoutes().containsKey(processGuid)) {
+			Route route = discoveryProperties.getRoutes().get(processGuid);
 			ActualLRPResponse response = new ActualLRPResponse();
 			response.setAddress(route.getAddress());
 			response.setIndex(0);

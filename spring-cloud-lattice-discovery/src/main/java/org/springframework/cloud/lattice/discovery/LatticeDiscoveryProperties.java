@@ -36,8 +36,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class LatticeDiscoveryProperties {
 	private boolean enabled = true;
 
-	private Receptor receptor = new Receptor();
-
 	@Getter(AccessLevel.PRIVATE)
 	@Setter(AccessLevel.PRIVATE)
 	private HostInfo hostInfo = initHostInfo();
@@ -70,13 +68,5 @@ public class LatticeDiscoveryProperties {
 	protected static class Route {
 		private String address = "192.168.11.1";
 		private int port;
-	}
-
-	@Data
-	protected static class Receptor {
-		private String host = "receptor.192.168.11.11.xip.io";
-		private String username;
-		private String password;
-		private boolean useRouterAddress;
 	}
 }

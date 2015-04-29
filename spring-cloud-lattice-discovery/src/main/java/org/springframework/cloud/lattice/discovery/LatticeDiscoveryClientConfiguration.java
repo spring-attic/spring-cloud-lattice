@@ -18,8 +18,10 @@ package org.springframework.cloud.lattice.discovery;
 
 import io.pivotal.receptor.client.ReceptorClient;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.TestRestTemplate;
+import org.springframework.cloud.lattice.LatticeProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -32,26 +34,28 @@ import org.springframework.util.StringUtils;
 @EnableConfigurationProperties
 public class LatticeDiscoveryClientConfiguration {
 
+	@Autowired
+	private LatticeProperties latticeProperties;
+
 	@Bean
 	public ReceptorService receptorService() {
-		return new ReceptorService(receptorClient(), latticeDiscoveryProperties());
+		return new ReceptorService(receptorClient(), latticeProperties, latticeDiscoveryProperties());
 	}
 
 	@Bean
 	public ReceptorClient receptorClient() {
 		if (!StringUtils
-				.hasText(latticeDiscoveryProperties().getReceptor().getUsername())) {
-			return new ReceptorClient(latticeDiscoveryProperties().getReceptor()
+				.hasText(latticeProperties.getReceptor().getUsername())) {
+			return new ReceptorClient(latticeProperties.getReceptor()
 					.getHost());
 		}
-		return new ReceptorClient(latticeDiscoveryProperties().getReceptor().getHost(),
-				getClientRequestFactory(latticeDiscoveryProperties()));
+		return new ReceptorClient(latticeProperties.getReceptor().getHost(),
+				getClientRequestFactory());
 	}
 
-	private ClientHttpRequestFactory getClientRequestFactory(
-			LatticeDiscoveryProperties properties) {
-		String username = properties.getReceptor().getUsername();
-		String password = properties.getReceptor().getPassword();
+	private ClientHttpRequestFactory getClientRequestFactory() {
+		String username = latticeProperties.getReceptor().getUsername();
+		String password = latticeProperties.getReceptor().getPassword();
 		return new TestRestTemplate(username, password).getRequestFactory();
 	}
 

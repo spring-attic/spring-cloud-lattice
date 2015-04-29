@@ -44,8 +44,12 @@ public class LatticeConnector extends AbstractCloudConnector<Process> {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public LatticeConnector() {
 		super((Class) LatticeServiceInfoCreator.class);
-		//TODO: where to get receptor host and credentials?
-		this.receptorClient = new ReceptorClient("receptor.192.168.11.11.xip.io");
+		String receptorHost = environment.getEnvValue("SPRING_CLOUD_LATTICE_RECEPTOR_HOST");
+		if (receptorHost == null) {
+			receptorHost = "receptor.192.168.11.11.xip.io";
+		}
+		//TODO: support username/password
+		this.receptorClient = new ReceptorClient(receptorHost);
 	}
 
 	public void setEnvironmentAccessor(EnvironmentAccessor environment) {
