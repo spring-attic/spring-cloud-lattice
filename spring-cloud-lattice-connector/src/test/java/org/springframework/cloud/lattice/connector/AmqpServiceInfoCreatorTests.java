@@ -20,19 +20,19 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
-import org.springframework.cloud.service.common.RedisServiceInfo;
+import org.springframework.cloud.service.common.AmqpServiceInfo;
 
 /**
  * @author Spencer Gibb
  */
-public class RedisServiceInfoCreatorTests extends AbstractServiceInfoCreatorTests {
+public class AmqpServiceInfoCreatorTests extends AbstractServiceInfoCreatorTests {
 
 	@Test
-	public void mysqlLatticeWorks() {
+	public void amqpLatticeWorks() {
 		LatticeConnector connector = createConnector();
 
-		RedisServiceInfo serviceInfo = findServiceInfo(connector, RedisServiceInfo.class, "redis-1");
-		assertThat(serviceInfo.getUri(), equalTo("redis://192.168.11.11:61001"));
+		AmqpServiceInfo serviceInfo = findServiceInfo(connector, AmqpServiceInfo.class, "rabbit-1");
+		assertThat(serviceInfo.getUri(), equalTo("amqp://guest:guest@192.168.11.11:61002/"));
 	}
 
 }
