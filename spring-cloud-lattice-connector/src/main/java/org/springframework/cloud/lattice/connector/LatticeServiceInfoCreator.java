@@ -27,6 +27,21 @@ import java.lang.*;
  */
 public abstract class LatticeServiceInfoCreator<SI extends ServiceInfo> implements ServiceInfoCreator<SI, Process> {
 
+	private final String prefix;
+
+	protected LatticeServiceInfoCreator(String prefix) {
+		this.prefix = prefix;
+	}
+
+	@Override
+	public boolean accept(Process process) {
+		return process.getProcessGuid().toLowerCase().startsWith(getPrefix());
+	}
+
+	protected String getPrefix() {
+		return prefix;
+	}
+
 	protected String findRequiredEnvVar(Process process, String varName) {
 		String value = findEnvVar(process, varName);
 		if (value == null) {

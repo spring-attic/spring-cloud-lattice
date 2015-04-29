@@ -7,6 +7,12 @@ Preview of Spring Cloud Lattice implementation
 1. `git clone git@github.com:markfisher/receptor-client.git`
 1. `./gradlew clean build install -x test`
 
+ltc create redis redis -r
+ltc create rabbit rabbitmq -r
+ltc create mysql mysql -r -e MYSQL_ROOT_PASSWORD=password
+mysql -h 192.168.11.11 -u root -P 61002 -p
+CREATE DATABASE test
+
 ### Running the sample
 
 1. [Install lattice](http://lattice.cf/docs/getting-started.html)

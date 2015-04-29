@@ -32,6 +32,8 @@ import org.springframework.cloud.config.java.AbstractCloudConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -69,11 +71,27 @@ public class SampleLatticeApplication {
 	@Autowired
 	DataSource dataSource;
 
+	@Autowired
+	RedisConnectionFactory redisConnectionFactory;
+
+	@Autowired
+	StringRedisTemplate redis;
+
 	@Configuration
 	protected static class LatticeConfig extends AbstractCloudConfig {
 		@Bean
 		DataSource dataSource() {
 			return connectionFactory().dataSource();
+		}
+
+		@Bean
+		RedisConnectionFactory redisConnectionFactory() {
+			return connectionFactory().redisConnectionFactory();
+		}
+
+		@Bean
+		StringRedisTemplate template(RedisConnectionFactory connectionFactory) {
+			return new StringRedisTemplate(connectionFactory);
 		}
 	}
 
@@ -102,10 +120,21 @@ public class SampleLatticeApplication {
 		return dataSource.toString();
 	}
 
-	@RequestMapping("/select")
+	@RequestMapping("/ds/select")
 	public Integer selectOne() {
 		JdbcTemplate jdbc = new JdbcTemplate(dataSource);
 		return jdbc.queryForObject("SELECT 1 FROM DUAL", Integer.class);
+	}
+
+	@RequestMapping("/redis")
+	public String redis() {
+		return redisConnectionFactory.toString();
+	}
+
+	@RequestMapping("/redis/test")
+	public String redisTemplate() {
+		redis.opsForValue().set("redisTest", "redisTestValue");
+		return redis.opsForValue().get("redisTest");
 	}
 
 	@RequestMapping("/hi")

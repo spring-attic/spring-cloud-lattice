@@ -1,1 +1,2 @@
 org.springframework.cloud.lattice.connector.MysqlServiceInfoCreator
+org.springframework.cloud.lattice.connector.RedisServiceInfoCreator

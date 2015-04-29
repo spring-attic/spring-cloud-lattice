@@ -20,19 +20,19 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
-import org.springframework.cloud.service.common.MysqlServiceInfo;
+import org.springframework.cloud.service.common.RedisServiceInfo;
 
 /**
  * @author Spencer Gibb
  */
-public class MysqlServiceInfoCreatorTests extends AbstractServiceInfoCreatorTests {
+public class RedisServiceInfoCreatorTests extends AbstractServiceInfoCreatorTests {
 
 	@Test
 	public void mysqlLatticeWorks() {
 		LatticeConnector connector = createConnector();
-		MysqlServiceInfo mysql = findServiceInfo(connector, MysqlServiceInfo.class, "mysql-1");
-		assertThat(mysql.getJdbcUrl(),
-				equalTo("jdbc:mysql://192.168.11.11:61003/test?user=root&password=password"));
+
+		RedisServiceInfo redis = findServiceInfo(connector, RedisServiceInfo.class, "redis-1");
+		assertThat(redis.getUri(), equalTo("redis://192.168.11.11:61001"));
 	}
 
 }
