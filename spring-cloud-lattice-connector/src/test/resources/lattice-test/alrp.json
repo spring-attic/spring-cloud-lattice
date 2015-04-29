@@ -64,5 +64,27 @@
             "epoch": "70045c14-8d67-4fb9-67a4-115b4f0ff99f",
             "index": 2
         }
+    },
+  {
+    "process_guid": "mongo",
+    "instance_guid": "mongo-1",
+    "cell_id": "lattice-cell-01",
+    "domain": "lattice",
+    "index": 0,
+    "address": "192.168.11.11",
+    "ports": [
+      {
+        "container_port": 27017,
+        "host_port": 61007
+      }
+    ],
+    "state": "RUNNING",
+    "crash_count": 0,
+    "since": 1430336578522336500,
+    "evacuating": false,
+    "modification_tag": {
+      "epoch": "1ab45aeb-7ffd-4021-589e-9ff9c914190b",
+      "index": 2
     }
+  }
 ]

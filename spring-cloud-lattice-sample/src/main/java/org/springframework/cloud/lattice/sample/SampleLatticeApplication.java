@@ -19,6 +19,7 @@ package org.springframework.cloud.lattice.sample;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mongodb.CommandResult;
 import lombok.extern.apachecommons.CommonsLog;
 
 import org.springframework.amqp.core.Binding;
@@ -38,6 +39,8 @@ import org.springframework.cloud.config.java.AbstractCloudConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -88,6 +91,9 @@ public class SampleLatticeApplication {
 	@Autowired
 	RabbitTemplate rabbit;
 
+	@Autowired
+	MongoTemplate mongo;
+
 	@Configuration
 	protected static class LatticeConfig extends AbstractCloudConfig {
 		@Bean
@@ -123,6 +129,11 @@ public class SampleLatticeApplication {
 		@Bean
 		ConnectionFactory rabbitConnectionFactory() {
 			return connectionFactory().rabbitConnectionFactory();
+		}
+
+		@Bean
+		MongoDbFactory mongoDbFactory() {
+			return connectionFactory().mongoDbFactory();
 		}
 	}
 
@@ -173,6 +184,12 @@ public class SampleLatticeApplication {
 		String message = "Sending hi";
 		rabbit.convertAndSend(queueName, message);
 		return "Sent: "+message;
+	}
+
+	@RequestMapping("/mongo")
+	public String mongo() {
+		CommandResult result = mongo.executeCommand("{ buildInfo: 1 }");
+		return result.getString("version");
 	}
 
 	@RequestMapping("/hi")

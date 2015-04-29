@@ -12,6 +12,7 @@ ltc create rabbit rabbitmq -r
 ltc create mysql mysql -r -e MYSQL_ROOT_PASSWORD=password
 mysql -h 192.168.11.11 -u root -P 61002 -p
 CREATE DATABASE test
+ltc create mongo mongo -r -e LC_ALL=C -- /entrypoint.sh mongod --smallfiles
 
 ### Running the sample
 

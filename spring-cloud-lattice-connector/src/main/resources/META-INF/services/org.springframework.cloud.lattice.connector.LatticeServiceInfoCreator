@@ -1,3 +1,4 @@
 org.springframework.cloud.lattice.connector.AmqpServiceInfoCreator
+org.springframework.cloud.lattice.connector.MongoServiceInfoCreator
 org.springframework.cloud.lattice.connector.MysqlServiceInfoCreator
 org.springframework.cloud.lattice.connector.RedisServiceInfoCreator
