@@ -30,8 +30,8 @@ public class MysqlServiceInfoCreatorTests extends AbstractServiceInfoCreatorTest
 	@Test
 	public void mysqlLatticeWorks() {
 		LatticeConnector connector = createConnector();
-		MysqlServiceInfo mysql = findServiceInfo(connector, MysqlServiceInfo.class, "mysql-1");
-		assertThat(mysql.getJdbcUrl(),
+		MysqlServiceInfo serviceInfo = findServiceInfo(connector, MysqlServiceInfo.class, "mysql-1");
+		assertThat(serviceInfo.getJdbcUrl(),
 				equalTo("jdbc:mysql://192.168.11.11:61003/test?user=root&password=password"));
 	}
 

@@ -21,6 +21,12 @@ import java.util.List;
 
 import lombok.extern.apachecommons.CommonsLog;
 
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
@@ -50,6 +56,8 @@ import javax.sql.DataSource;
 @CommonsLog
 public class SampleLatticeApplication {
 
+	final static String queueName = "spring-boot";
+
 	public static final String CLIENT_NAME = "myservice";
 	// public static final String CLIENT_NAME = "lattice-app";
 
@@ -77,6 +85,9 @@ public class SampleLatticeApplication {
 	@Autowired
 	StringRedisTemplate redis;
 
+	@Autowired
+	RabbitTemplate rabbit;
+
 	@Configuration
 	protected static class LatticeConfig extends AbstractCloudConfig {
 		@Bean
@@ -92,6 +103,26 @@ public class SampleLatticeApplication {
 		@Bean
 		StringRedisTemplate template(RedisConnectionFactory connectionFactory) {
 			return new StringRedisTemplate(connectionFactory);
+		}
+
+		@Bean
+		Queue queue() {
+			return new Queue(queueName, false);
+		}
+
+		@Bean
+		TopicExchange exchange() {
+			return new TopicExchange("spring-boot-exchange");
+		}
+
+		@Bean
+		Binding binding(Queue queue, TopicExchange exchange) {
+			return BindingBuilder.bind(queue).to(exchange).with(queueName);
+		}
+
+		@Bean
+		ConnectionFactory rabbitConnectionFactory() {
+			return connectionFactory().rabbitConnectionFactory();
 		}
 	}
 
@@ -135,6 +166,13 @@ public class SampleLatticeApplication {
 	public String redisTemplate() {
 		redis.opsForValue().set("redisTest", "redisTestValue");
 		return redis.opsForValue().get("redisTest");
+	}
+
+	@RequestMapping("/rabbit")
+	public String rabbit() {
+		String message = "Sending hi";
+		rabbit.convertAndSend(queueName, message);
+		return "Sent: "+message;
 	}
 
 	@RequestMapping("/hi")

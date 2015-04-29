@@ -16,23 +16,28 @@
 
 package org.springframework.cloud.lattice.connector;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
+import org.springframework.cloud.service.common.AmqpServiceInfo;
 
-import org.junit.Test;
-import org.springframework.cloud.service.common.RedisServiceInfo;
+import io.pivotal.receptor.commands.ActualLRPResponse;
 
 /**
  * @author Spencer Gibb
  */
-public class RedisServiceInfoCreatorTests extends AbstractServiceInfoCreatorTests {
+public class AmqpServiceInfoCreator extends LatticeServiceInfoCreator<AmqpServiceInfo> {
 
-	@Test
-	public void mysqlLatticeWorks() {
-		LatticeConnector connector = createConnector();
+	public AmqpServiceInfoCreator() {
+		super("rabbit");
+	}
 
-		RedisServiceInfo serviceInfo = findServiceInfo(connector, RedisServiceInfo.class, "redis-1");
-		assertThat(serviceInfo.getUri(), equalTo("redis://192.168.11.11:61001"));
+	@Override
+	public AmqpServiceInfo createServiceInfo(Process process) {
+		ActualLRPResponse actual = process.getFirstActual();
+		String address = actual.getAddress();
+		int port = actual.getPorts()[0].getHostPort();
+		String username = "guest";
+		String password = "guest";
+		String virtualHost = "";
+		return new AmqpServiceInfo(actual.getInstanceGuid(), address, port, username, password, virtualHost);
 	}
 
 }
