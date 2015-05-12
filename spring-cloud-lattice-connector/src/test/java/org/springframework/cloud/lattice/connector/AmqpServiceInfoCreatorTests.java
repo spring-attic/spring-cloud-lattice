@@ -32,7 +32,7 @@ public class AmqpServiceInfoCreatorTests extends AbstractServiceInfoCreatorTests
 		LatticeConnector connector = createConnector();
 
 		AmqpServiceInfo serviceInfo = findServiceInfo(connector, AmqpServiceInfo.class, "rabbit-1");
-		assertThat(serviceInfo.getUri(), equalTo("amqp://guest:guest@192.168.11.11:61002/"));
+		assertThat(serviceInfo.getUri(), equalTo("amqp://guest:guest@192.168.11.11:61002"));
 	}
 
 }
