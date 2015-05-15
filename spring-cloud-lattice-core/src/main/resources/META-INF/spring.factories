@@ -1,2 +1,6 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 org.springframework.cloud.lattice.LatticeAutoConfiguration
+
+# Application Listeners
+org.springframework.context.ApplicationListener=\
+org.springframework.cloud.lattice.LatticeCloudApplicationListener
