@@ -30,6 +30,7 @@ public class LatticeCloudApplicationListener implements
 	public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
 		if (!event.getEnvironment().resolvePlaceholders("${PROCESS_GUID:}").equals("")) {
 			event.getEnvironment().addActiveProfile("cloud");
+			event.getEnvironment().addActiveProfile("lattice");
 		}
 	}
 
