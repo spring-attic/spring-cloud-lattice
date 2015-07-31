@@ -4,7 +4,7 @@ Preview of Spring Cloud Lattice implementation
 
 ### Temporary pre-setup
 
-1. `git clone git@github.com:markfisher/receptor-client.git`
+1. `git clone git@github.com:cloudfoundry-incubator/receptor-client.git`
 1. `./gradlew clean build install -x test`
 
 ltc create redis redis -r
