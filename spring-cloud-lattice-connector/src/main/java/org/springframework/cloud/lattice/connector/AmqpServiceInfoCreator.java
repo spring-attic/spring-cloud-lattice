@@ -18,7 +18,7 @@ package org.springframework.cloud.lattice.connector;
 
 import org.springframework.cloud.service.common.AmqpServiceInfo;
 
-import io.pivotal.receptor.commands.ActualLRPResponse;
+import org.cloudfoundry.receptor.commands.ActualLRPResponse;
 import org.springframework.cloud.util.UriInfo;
 
 /**

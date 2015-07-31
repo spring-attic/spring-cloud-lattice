@@ -19,7 +19,7 @@ package org.springframework.cloud.lattice.connector;
 import org.springframework.cloud.service.common.MysqlServiceInfo;
 import org.springframework.cloud.util.UriInfo;
 
-import io.pivotal.receptor.commands.ActualLRPResponse;
+import org.cloudfoundry.receptor.commands.ActualLRPResponse;
 
 import java.lang.*;
 

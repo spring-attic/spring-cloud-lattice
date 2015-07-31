@@ -20,14 +20,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import io.pivotal.receptor.client.ReceptorClient;
+import org.cloudfoundry.receptor.client.ReceptorClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.convert.converter.Converter;
 
-import io.pivotal.receptor.commands.ActualLRPResponse;
+import org.cloudfoundry.receptor.commands.ActualLRPResponse;
 
 /**
  * @author Spencer Gibb

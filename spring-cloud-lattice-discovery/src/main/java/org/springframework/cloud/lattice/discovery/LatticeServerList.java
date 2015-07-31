@@ -25,7 +25,7 @@ import org.springframework.core.convert.converter.Converter;
 import com.netflix.client.config.IClientConfig;
 import com.netflix.loadbalancer.AbstractServerList;
 
-import io.pivotal.receptor.commands.ActualLRPResponse;
+import org.cloudfoundry.receptor.commands.ActualLRPResponse;
 
 /**
  * @author Spencer Gibb

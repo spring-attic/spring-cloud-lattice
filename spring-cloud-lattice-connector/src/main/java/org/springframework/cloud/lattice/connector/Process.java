@@ -23,8 +23,8 @@ import lombok.Data;
 
 import org.springframework.util.Assert;
 
-import io.pivotal.receptor.commands.ActualLRPResponse;
-import io.pivotal.receptor.commands.DesiredLRPResponse;
+import org.cloudfoundry.receptor.commands.ActualLRPResponse;
+import org.cloudfoundry.receptor.commands.DesiredLRPResponse;
 
 /**
  * @author Spencer Gibb

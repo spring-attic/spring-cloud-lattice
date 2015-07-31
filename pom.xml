@@ -62,7 +62,7 @@
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>io.pivotal.receptor</groupId>
+				<groupId>org.cloudfoundry.receptor</groupId>
 				<artifactId>receptor-client</artifactId>
 				<version>${receptor.version}</version>
 			</dependency>

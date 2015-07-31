@@ -55,7 +55,7 @@
 			<artifactId>archaius-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.pivotal.receptor</groupId>
+			<groupId>org.cloudfoundry.receptor</groupId>
 			<artifactId>receptor-client</artifactId>
 		</dependency>
 		<dependency>
