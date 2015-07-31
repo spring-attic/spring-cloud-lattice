@@ -18,7 +18,7 @@ package org.springframework.cloud.lattice.connector;
 
 import org.springframework.cloud.service.common.RedisServiceInfo;
 
-import io.pivotal.receptor.commands.ActualLRPResponse;
+import org.cloudfoundry.receptor.commands.ActualLRPResponse;
 
 /**
  * @author Spencer Gibb

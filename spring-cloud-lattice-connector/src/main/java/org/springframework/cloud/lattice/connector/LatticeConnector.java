@@ -16,10 +16,10 @@
 
 package org.springframework.cloud.lattice.connector;
 
-import io.pivotal.receptor.client.ReceptorClient;
-import io.pivotal.receptor.client.ReceptorOperations;
-import io.pivotal.receptor.commands.ActualLRPResponse;
-import io.pivotal.receptor.commands.DesiredLRPResponse;
+import org.cloudfoundry.receptor.client.ReceptorClient;
+import org.cloudfoundry.receptor.client.ReceptorOperations;
+import org.cloudfoundry.receptor.commands.ActualLRPResponse;
+import org.cloudfoundry.receptor.commands.DesiredLRPResponse;
 import org.springframework.cloud.AbstractCloudConnector;
 import org.springframework.cloud.FallbackServiceInfoCreator;
 import org.springframework.cloud.app.ApplicationInstanceInfo;
@@ -27,7 +27,11 @@ import org.springframework.cloud.app.BasicApplicationInstanceInfo;
 import org.springframework.cloud.service.BaseServiceInfo;
 import org.springframework.cloud.util.EnvironmentAccessor;
 
-import java.lang.*;
+import java.lang.Class;
+import java.lang.Object;
+import java.lang.Override;
+import java.lang.String;
+import java.lang.SuppressWarnings;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -99,7 +103,7 @@ public class LatticeConnector extends AbstractCloudConnector<Process> {
 		return new FallbackServiceInfoCreator<BaseServiceInfo, Process>() {
 			@Override
 			public BaseServiceInfo createServiceInfo(Process process) {
-				return new BaseServiceInfo(process.getDesired().getProcessGuid());
+				return new BaseServiceInfo(process.getProcessGuid());
 			}
 		};
 	}

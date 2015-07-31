@@ -16,7 +16,7 @@
 
 package org.springframework.cloud.lattice.connector;
 
-import io.pivotal.receptor.support.EnvironmentVariable;
+import org.cloudfoundry.receptor.support.EnvironmentVariable;
 import org.springframework.cloud.ServiceInfoCreator;
 import org.springframework.cloud.service.ServiceInfo;
 

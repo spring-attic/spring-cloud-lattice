@@ -16,7 +16,7 @@
 
 package org.springframework.cloud.lattice.discovery;
 
-import io.pivotal.receptor.client.ReceptorClient;
+import org.cloudfoundry.receptor.client.ReceptorClient;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

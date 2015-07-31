@@ -16,10 +16,10 @@
 
 package org.springframework.cloud.lattice.discovery;
 
-import io.pivotal.receptor.client.ReceptorClient;
-import io.pivotal.receptor.commands.ActualLRPResponse;
-import io.pivotal.receptor.commands.DesiredLRPResponse;
-import io.pivotal.receptor.support.Port;
+import org.cloudfoundry.receptor.client.ReceptorClient;
+import org.cloudfoundry.receptor.commands.ActualLRPResponse;
+import org.cloudfoundry.receptor.commands.DesiredLRPResponse;
+import org.cloudfoundry.receptor.support.Port;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +93,7 @@ public class ReceptorService {
 	}
 
 	private String getAddress(DesiredLRPResponse desired) {
-		Map<String, io.pivotal.receptor.support.Route[]> routes = desired.getRoutes();
+		Map<String,org.cloudfoundry.receptor.support.Route[]> routes = desired.getRoutes();
 		if (routes.isEmpty()) {
 			return "<UNKNOWN>";
 		}
