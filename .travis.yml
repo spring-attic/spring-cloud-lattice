@@ -8,11 +8,11 @@ before_install:
   - git clone https://github.com/markfisher/receptor-client
   - cd receptor-client && ./gradlew clean build install -x test && cd ..
 install:
-- mvn --settings .settings.xml install -P docs -q -U -DskipTests=true -Dmaven.test.redirectTestOutputToFile=true
+- ./mvnw install -P docs -q -U -DskipTests=true -Dmaven.test.redirectTestOutputToFile=true
 #- ./docs/src/main/asciidoc/ghpages.sh
 script:
-- '[ "${TRAVIS_PULL_REQUEST}" != "false" ] || mvn --settings .settings.xml deploy -nsu -Dmaven.test.redirectTestOutputToFile=true'
-- '[ "${TRAVIS_PULL_REQUEST}" = "false" ] || mvn --settings .settings.xml install -nsu -Dmaven.test.redirectTestOutputToFile=true'
+- '[ "${TRAVIS_PULL_REQUEST}" != "false" ] || ./mvnw -s .settings.xml deploy -nsu -Dmaven.test.redirectTestOutputToFile=true'
+- '[ "${TRAVIS_PULL_REQUEST}" = "false" ] || ./mvnw install -nsu -Dmaven.test.redirectTestOutputToFile=true'
 env:
   global:
   - GIT_NAME="Spencer Gibb"
