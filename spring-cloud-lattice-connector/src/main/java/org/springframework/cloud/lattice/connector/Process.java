@@ -21,8 +21,6 @@ import java.util.List;
 
 import lombok.Data;
 
-import org.springframework.util.Assert;
-
 import org.cloudfoundry.receptor.commands.ActualLRPResponse;
 import org.cloudfoundry.receptor.commands.DesiredLRPResponse;
 
@@ -35,7 +33,9 @@ public class Process {
 	private final List<ActualLRPResponse> actuals = new ArrayList<>();
 
 	public ActualLRPResponse getFirstActual() {
-		Assert.notEmpty(actuals, "empty actuals");
+		if (actuals.isEmpty()) {
+			throw new IllegalArgumentException("empty actuals");
+		}
 		return actuals.get(0);
 	}
 
