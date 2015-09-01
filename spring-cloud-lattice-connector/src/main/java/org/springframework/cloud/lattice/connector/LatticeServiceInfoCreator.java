@@ -20,8 +20,6 @@ import org.cloudfoundry.receptor.support.EnvironmentVariable;
 import org.springframework.cloud.ServiceInfoCreator;
 import org.springframework.cloud.service.ServiceInfo;
 
-import java.lang.*;
-
 /**
  * @author Spencer Gibb
  */
@@ -39,7 +37,7 @@ public abstract class LatticeServiceInfoCreator<SI extends ServiceInfo> implemen
 	}
 
 	protected String getPrefix() {
-		return prefix;
+		return this.prefix;
 	}
 
 	protected String findRequiredEnvVar(Process process, String varName) {

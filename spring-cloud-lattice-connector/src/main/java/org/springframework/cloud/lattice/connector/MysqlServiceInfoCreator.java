@@ -16,12 +16,9 @@
 
 package org.springframework.cloud.lattice.connector;
 
+import org.cloudfoundry.receptor.commands.ActualLRPResponse;
 import org.springframework.cloud.service.common.MysqlServiceInfo;
 import org.springframework.cloud.util.UriInfo;
-
-import org.cloudfoundry.receptor.commands.ActualLRPResponse;
-
-import java.lang.*;
 
 /**
  * @author Spencer Gibb
