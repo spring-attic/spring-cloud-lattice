@@ -19,6 +19,7 @@ package org.springframework.cloud.lattice.discovery;
 import org.cloudfoundry.receptor.client.ReceptorClient;
 import org.cloudfoundry.receptor.commands.ActualLRPResponse;
 import org.cloudfoundry.receptor.commands.DesiredLRPResponse;
+import org.cloudfoundry.receptor.support.HttpRoute;
 import org.cloudfoundry.receptor.support.Port;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ import org.springframework.core.convert.converter.Converter;
  */
 public class ReceptorService {
 
+	public static final String UNKNOWN = "<UNKNOWN>";
 	private ReceptorClient receptor;
 	private LatticeProperties latticeProperties;
 	private LatticeDiscoveryProperties discoveryProperties;
@@ -95,8 +97,16 @@ public class ReceptorService {
 	private String getAddress(DesiredLRPResponse desired) {
 		Map<String,org.cloudfoundry.receptor.support.Route[]> routes = desired.getRoutes();
 		if (routes.isEmpty()) {
-			return "<UNKNOWN>";
+			return UNKNOWN;
 		}
-		return routes.values().iterator().next()[0].getHostnames()[0];
+		org.cloudfoundry.receptor.support.Route[] cfRoutes = routes.get("cf-router");
+		if (cfRoutes.length == 0 || !(cfRoutes[0] instanceof HttpRoute)) {
+			return UNKNOWN;
+		}
+		String[] hostnames = ((HttpRoute) cfRoutes[0]).getHostnames();
+		if (hostnames.length == 0) {
+			return UNKNOWN;
+		}
+		return hostnames[0];
 	}
 }

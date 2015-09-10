@@ -71,7 +71,7 @@
 
 
 	<properties>
-		<receptor.version>0.0.1-SNAPSHOT</receptor.version>
+		<receptor.version>1.0.0.BUILD-SNAPSHOT</receptor.version>
 	</properties>
 
 	<profiles>
