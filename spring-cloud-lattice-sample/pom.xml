@@ -17,6 +17,7 @@
 
 	<properties>
 		<docker.image.prefix>springcloud</docker.image.prefix>
+		<spring.cloud.netflix.version>1.1.0.M1</spring.cloud.netflix.version>
 	</properties>
 
 	<build>
@@ -59,18 +60,6 @@
 		</plugins>
 	</build>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-starter-parent</artifactId>
-				<version>Brixton.BUILD-SNAPSHOT</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -99,6 +88,7 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-hystrix</artifactId>
+			<version>${spring.cloud.netflix.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
