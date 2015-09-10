@@ -61,7 +61,7 @@ public class ReceptorService {
 	private List<ActualLRPResponse> getResponses(String processGuid) {
 		List<ActualLRPResponse> responses = new ArrayList<>();
 		if (!latticeProperties.getReceptor().isUseRouterAddress()) {
-			receptor.getActualLRPsByProcessGuid(processGuid);
+			responses.addAll(receptor.getActualLRPsByProcessGuid(processGuid));
 		}
 		else {
 			DesiredLRPResponse desired = receptor.getDesiredLRP(processGuid);
