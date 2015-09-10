@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.springframework.cloud</groupId>
 		<artifactId>spring-cloud-build</artifactId>
-		<version>1.1.0.BUILD-SNAPSHOT</version>
+		<version>1.1.0.M1</version>
 		<relativePath/>
 		<!-- lookup parent from repository -->
 	</parent>
@@ -42,7 +42,7 @@
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-netflix</artifactId>
-				<version>1.1.0.BUILD-SNAPSHOT</version>
+				<version>1.1.0.M1</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -71,7 +71,7 @@
 
 
 	<properties>
-		<receptor.version>1.0.0.BUILD-SNAPSHOT</receptor.version>
+		<receptor.version>1.0.0.M1</receptor.version>
 	</properties>
 
 	<profiles>
