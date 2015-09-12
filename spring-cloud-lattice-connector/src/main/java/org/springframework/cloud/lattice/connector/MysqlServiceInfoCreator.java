@@ -39,8 +39,21 @@ public class MysqlServiceInfoCreator extends LatticeServiceInfoCreator<MysqlServ
 		String password = findRequiredEnvVar(process, "MYSQL_ROOT_PASSWORD");
 		String path = findEnvVar(process, "MYSQL_DATABASE_NAME", "test");
 
-		String url = new UriInfo(scheme, address, port, username, password, path).toString();
-		return new MysqlServiceInfo(actual.getInstanceGuid(), url);
+		return new MysqlServiceInfo(actual.getInstanceGuid(), constructJdbcUrl(scheme, address, port, username, password, path));
+	}
+
+	private String constructJdbcUrl(String scheme, String address, int port, String username, String password, String path) {
+		return new StringBuilder().append(scheme)
+				.append("://")
+				.append(address)
+				.append(":")
+				.append(port)
+				.append("/")
+				.append(path)
+				.append("?user=")
+				.append(username)
+				.append("&password=")
+				.append(password).toString();
 	}
 
 }
