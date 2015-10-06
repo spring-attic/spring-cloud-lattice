@@ -2,16 +2,16 @@
 
 Preview of Spring Cloud Lattice implementation
 
-### Temporary pre-setup
+### Setup
 
-1. `git clone git@github.com:cloudfoundry-incubator/receptor-client.git`
-1. `./gradlew clean build install -x test`
+Tested with lattice v0.5.0
 
-ltc create redis redis -r
-ltc create rabbit rabbitmq -r
-ltc create mysql mysql -r -e MYSQL_ROOT_PASSWORD=password
-mysql -h 192.168.11.11 -u root -P 61002 -p
-CREATE DATABASE test
+Create redis, rabbit and mysql using the [lattice docs](http://lattice.cf/docs/docker-image-examples/). 
+
+```
+mysql -h"192.168.11.11" -p"somesecret" -u"root"
+CREATE DATABASE test;
+```
 
 ### Running the sample
 
@@ -25,14 +25,11 @@ CREATE DATABASE test
 
 Replace `<yourdockerhubid>` below with your docker hub id.
 
-1. `cd spring-cloud-lattice-sample`
-1. `mvn --settings ../.settings.xml clean package docker:build`
-1. `docker tag spring-cloud-lattice-sample:latest <yourdockerhubid>/spring-cloud-lattice-sample`
-1. `docker push <yourdockerhubid>/spring-cloud-lattice-sample`
-1. `LATTICE_CLI_TIMEOUT=180 ltc create spring-cloud-lattice-sample spencergibb/spring-cloud-lattice-sample`
-
-6. visit [http://spring-cloud-lattice-sample.192.168.11.11.xip.io?service=spring-cloud-lattice-sample](http://spring-cloud-lattice-sample.192.168.11.11.xip.io?service=spring-cloud-lattice-sample) verify that the 3 services rotate through as you refresh
-6. visit [http://spring-cloud-lattice-sample.192.168.11.11.xip.io/me](http://spring-cloud-lattice-sample.192.168.11.11.xip.io/me) verify that the 3 services rotate through as you refresh
+1. `./mvnw clean package`
+1. `ltc build-droplet sc-lattice-sample java --path=spring-cloud-lattice-sample/target/spring-cloud-lattice-sample-1.0.0.BUILD-SNAPSHOT.jar`
+1. `ltc launch-droplet sc-lattice-sample sc-lattice-sample`
+1. visit [http://spring-cloud-lattice-sample.192.168.11.11.xip.io?service=sc-lattice-sample](http://spring-cloud-lattice-sample.192.168.11.11.xip.io?service=sc-lattice-sample) verify that the 3 services rotate through as you refresh
+1. visit [http://sc-lattice-sample.192.168.11.11.xip.io/me](http://sc-lattice-sample.192.168.11.11.xip.io/me) verify that the 3 services rotate through as you refresh
 
 ### IDE Discovery
 
@@ -46,7 +43,5 @@ the service running in the ide.
 
 ### Config Server
 
-LATTICE_CLI_TIMEOUT=180 ltc create configserver springcloud/configserver
-LATTICE_CLI_TIMEOUT=180 ltc create configserver mstine/configserver --env SERVER_PORT=8080
+TODO: document using catalyst `ltc create -m 512 catalyst mstine/catalyst`
 
-SPRING_CLOUD_CONFIG_SERVER_GIT_URI=
