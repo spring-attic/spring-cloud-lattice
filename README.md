@@ -23,8 +23,6 @@ CREATE DATABASE test;
 
 ### Running the sample ON LATTICE
 
-Replace `<yourdockerhubid>` below with your docker hub id.
-
 1. `./mvnw clean package`
 1. `ltc build-droplet sc-lattice-sample java --path=spring-cloud-lattice-sample/target/spring-cloud-lattice-sample-1.0.0.BUILD-SNAPSHOT.jar`
 1. `ltc launch-droplet sc-lattice-sample sc-lattice-sample`
