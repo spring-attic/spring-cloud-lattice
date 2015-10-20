@@ -18,6 +18,12 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.2</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-lattice-core</artifactId>
 		</dependency>
