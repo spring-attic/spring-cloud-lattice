@@ -1,59 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>org.springframework.cloud</groupId>
-	<artifactId>spring-cloud-lattice</artifactId>
-	<version>1.0.0.BUILD-SNAPSHOT</version>
-	<packaging>pom</packaging>
-	<name>Spring Cloud Lattice</name>
-	<description>Spring Cloud Lattice</description>
-
 	<parent>
+		<artifactId>spring-cloud-dependencies-parent</artifactId>
 		<groupId>org.springframework.cloud</groupId>
-		<artifactId>spring-cloud-build</artifactId>
 		<version>1.1.0.BUILD-SNAPSHOT</version>
-		<relativePath/>
-		<!-- lookup parent from repository -->
+        <relativePath/>
 	</parent>
-
-	<scm>
-		<url>https://github.com/spring-cloud/spring-cloud-lattice</url>
-		<connection>
-			scm:git:git://github.com/spring-cloud/spring-cloud-lattice.git
-		</connection>
-		<developerConnection>
-			scm:git:ssh://git@github.com/spring-cloud/spring-cloud-lattice.git
-		</developerConnection>
-		<tag>HEAD</tag>
-	</scm>
-
-	<modules>
-		<module>spring-cloud-lattice-dependencies</module>
-		<module>spring-cloud-lattice-core</module>
-		<module>spring-cloud-lattice-discovery</module>
-		<module>spring-cloud-lattice-connector</module>
-		<module>spring-cloud-lattice-sample</module>
-	</modules>
-
+	<artifactId>spring-cloud-commons-dependencies</artifactId>
+	<version>1.1.0.BUILD-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>spring-cloud-commons-dependencies</name>
+	<description>Spring Cloud Commons Dependencies</description>
+	<properties>
+		<spring-cloud-commons.version>1.1.0.BUILD-SNAPSHOT</spring-cloud-commons.version>
+	</properties>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-lattice-dependencies</artifactId>
-				<version>${project.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
+				<artifactId>spring-cloud-commons</artifactId>
+				<version>1.1.0.BUILD-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-context</artifactId>
+				<version>1.1.0.BUILD-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-starter</artifactId>
+				<version>1.1.0.BUILD-SNAPSHOT</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
-	<properties>
-		<receptor.version>1.0.0.M1</receptor.version>
-	</properties>
-
 	<profiles>
 		<profile>
 			<id>spring</id>
