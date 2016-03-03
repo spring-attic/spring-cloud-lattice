@@ -1,3 +1,5 @@
+## This project is obselete and no longer maintained.
+
 ## Spring Cloud Lattice
 
 Preview of Spring Cloud Lattice implementation
